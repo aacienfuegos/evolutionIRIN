@@ -1,0 +1,40 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% EXTRA %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+NUMBER OF ROBOTS								= 1	
+ROBOT 1: X POSITION (meters)		= 0.0
+ROBOT 1: Y POSITION (meters)		= 0.0
+ROBOT 1: ORIENTATION (radians) 	= 0.0
+WRITE TO FILE (0 No, 1 YES )		= 1
+RUN TIME													= 10000
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% ENVIRONMENT %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+NUMBER OF LIGHT OBJECTS  			= 1
+LIGHT X POSITION							= -1
+LIGHT Y POSITION							= -1
+NUMBER OF BLUE LIGHT OBJECTS 	= 0
+NUMBER OF RED LIGHT OBJECTS 	= 0
+NUMBER OF GROUND AREA 				= 0
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% SENSORS %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+LIGHT SENSOR RANGE (meters)				= 4.5
+BLUE LIGHT SENSOR RANGE (meters)	= 4.5
+RED LIGHT SENSOR RANGE (meters)		= 4.5
+BATTERY SENSOR RANGE (meters)			= 0.5
+BATTERY CHARGE COEF 							= 0.01
+BATTERY DISCHARGE COEF						= 0.0005
+BLUE BATTERY SENSOR RANGE (meters)		= 0.5
+BLUE BATTERY CHARGE COEF 							= 0.01
+BLUE BATTERY DISCHARGE COEF						= 0.001
+RED BATTERY SENSOR RANGE (meters)			= 0.75
+RED BATTERY CHARGE COEF 							= 0.01
+RED BATTERY DISCHARGE COEF						= 0.0001
+ODOMETRY ERROR                        = 0.0
+
