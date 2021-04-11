@@ -10,7 +10,10 @@ CBlueLightObject::CBlueLightObject(const char* pch_name) : CGeometry(pch_name)
 	m_fIntRadius=0.0;
 	m_fExtRadius=0.0;
 	m_fGrey=1.0;
-	m_nVaccines = 1;
+	m_nVaccinesCapacity = 1;
+	m_nVaccines = m_nVaccinesCapacity;
+	m_nOutStepNumber=0;
+	RECOVERY_TIME = 1000;
 
 	m_nActivation = true;
 }
@@ -155,4 +158,59 @@ void CBlueLightObject::SetVaccines(int nVaccines){
 int CBlueLightObject::GetVaccines ( void )
 {
 	return m_nVaccines;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+void CBlueLightObject::SetVaccinesCapacity (int nVaccinesCapacity)
+{
+	m_nVaccinesCapacity = nVaccinesCapacity;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CBlueLightObject::GetVaccinesCapacity ( void )
+{
+	return m_nVaccinesCapacity;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+void CBlueLightObject::SetOutStepNumber(unsigned int n_step_number){
+	m_nOutStepNumber = n_step_number;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CBlueLightObject::GetOutStepNumber ( void )
+{
+	return m_nOutStepNumber;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CBlueLightObject::ResetVaccines ( unsigned int n_step_number)
+{
+  if(m_nActivation) m_nOutStepNumber = n_step_number;
+  if ( (n_step_number - m_nOutStepNumber) >= RECOVERY_TIME )
+  {
+    /* toggle light */
+    m_nActivation = 1;
+	m_nVaccines = m_nVaccinesCapacity;
+	printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+	std:cout << m_nOutStepNumber;
+	
+	// Reset Out Step Number
+	m_nOutStepNumber = n_step_number;
+
+  }
+
+	/* default return true */
+	return m_nActivation;
+
 }

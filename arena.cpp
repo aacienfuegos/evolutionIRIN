@@ -296,17 +296,24 @@ void CArena::SimulationStep(unsigned int n_step_number,
 		}
 		
 		/* Get blue light timing */
-		vector<CBlueLightObject*>::iterator blue_it=m_vecBlueLightObject.begin();
-		while(blue_it!=m_vecBlueLightObject.end()){
-			(*blue_it)->Switch((*blue_it)->GetTiming(n_step_number));
-			blue_it++;
-		}
+		//vector<CBlueLightObject*>::iterator blue_it=m_vecBlueLightObject.begin();
+		//while(blue_it!=m_vecBlueLightObject.end()){
+			//(*blue_it)->Switch((*blue_it)->GetTiming(n_step_number));
+			//blue_it++;
+		//}
 		
 		/* Get blue light timing */
 		vector<CRedLightObject*>::iterator red_it=m_vecRedLightObject.begin();
 		while(red_it!=m_vecRedLightObject.end()){
 			(*red_it)->Switch((*red_it)->GetTiming(n_step_number));
 			red_it++;
+		}
+
+		/* Get blue light recovery vaccines */
+		vector<CBlueLightObject*>::iterator blue_it=m_vecBlueLightObject.begin();
+		while(blue_it!=m_vecBlueLightObject.end()){
+			(*blue_it)->ResetVaccines(n_step_number);
+			blue_it++;
 		}
 }
 
@@ -721,9 +728,13 @@ void CArena::PickUpNearestBlueLight (dVector2 Pos)
 	}
 
 	int nVaccines = light->GetVaccines();
+	printf("-------------------------------------\n");
+	std:cout << nVaccines;
 	if ( lightFound == true )
 		nVaccines -= 1;
-		if(nVaccines<=0) light->Switch(0);
+		if(nVaccines<=0) {
+			light->Switch(0);
+		}
 		light->SetVaccines(nVaccines);
 }
 

@@ -106,21 +106,21 @@ const static char *pchHeightMap =
 
 	"%%%%%%%%%%%%%%%%%%%%"
 	"%##################%"
-	"%######%%%#########%"
-	"%##################%"
-	"%##################%"
-	"%##################%"
-	"%############%%%###%"
-	"%##################%"
-	"%##%%%%############%"
-	"%##################%"
-	"%##################%"
-	"%##########%%%%%###%"
 	"%##################%"
 	"%##################%"
 	"%##################%"
 	"%##################%"
-	"%###%%%#####%%%%###%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
+	"%##################%"
 	"%##################%"
 	"%##################%"
 	"%%%%%%%%%%%%%%%%%%%%";
@@ -156,7 +156,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 		m_nBlueLightObjectNumber = 0;
 		m_pcvBlueLightObjects = new dVector2[m_nBlueLightObjectNumber];
-		m_nVaccines = new int[m_nBlueLightObjectNumber];
+		m_nVaccinesCapacity = new int[m_nBlueLightObjectNumber];
 
 		m_nNumberOfGroundArea = 0;
 		m_vGroundAreaCenter = new dVector2[m_nNumberOfGroundArea];
@@ -178,6 +178,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 		/* Get number of robots */
 		m_nRobotsNumber = getInt('=', pfile);
+
 		/* Set numer of robots */
 		SetNumberOfEpucks(m_nRobotsNumber);
 		/* For each robot get position and orientation */
@@ -214,15 +215,15 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 		m_nBlueLightObjectNumber = getInt('=', pfile);
 		/* Create Objects */
 		m_pcvBlueLightObjects = new dVector2[m_nBlueLightObjectNumber];
-		m_nVaccines = new int[m_nBlueLightObjectNumber];
+		m_nVaccinesCapacity = new int[m_nBlueLightObjectNumber];
 		for (int i = 0; i < m_nBlueLightObjectNumber; i++)
 		{
 			/* Get X position */
 			m_pcvBlueLightObjects[i].x = getDouble('=', pfile);
 			/* Get Y Position */
 			m_pcvBlueLightObjects[i].y = getDouble('=', pfile);
-			/* Get number of Vaccines */
-			m_nVaccines[i] = getInt('=', pfile);
+			/* Get number of Vaccines Capacity */
+			m_nVaccinesCapacity[i] = getInt('=', pfile);
 		}
 
 		/* Red Lights */
@@ -333,7 +334,8 @@ CArena *CIri1Exp::CreateArena()
 		sprintf(pchTemp, "BlueLightObject%d", i);
 		CBlueLightObject *pcBlueLightObject = new CBlueLightObject(pchTemp);
 		pcBlueLightObject->SetCenter(m_pcvBlueLightObjects[i]);
-		pcBlueLightObject->SetVaccines(m_nVaccines[i]);
+		pcBlueLightObject->SetVaccinesCapacity(m_nVaccinesCapacity[i]);
+		pcBlueLightObject->SetVaccines(m_nVaccinesCapacity[i]);
 		pcArena->AddBlueLightObject(pcBlueLightObject);
 	}
 

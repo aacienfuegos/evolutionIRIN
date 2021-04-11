@@ -40,6 +40,13 @@ public:
 	void SetVaccines(int nVaccines);
 	int GetVaccines(void);
 
+	void SetVaccinesCapacity(int nVaccinesCapacity);
+	int GetVaccinesCapacity(void);
+
+	int ResetVaccines ( unsigned int n_step_number );
+	int GetOutStepNumber ( void );
+	void SetOutStepNumber ( unsigned int n_step_number );
+
   void Reset ( void );
 
 private:
@@ -50,6 +57,9 @@ private:
 	float m_fHeight;
 	
 	int m_nVaccines;
+	int m_nVaccinesCapacity;
+	unsigned int m_nOutStepNumber;
+	unsigned int RECOVERY_TIME;
 	
 	int m_nActivation;
 };
