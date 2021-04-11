@@ -230,6 +230,7 @@ iri1controller.o: iri1controller.cpp /usr/include/stdc-predef.h \
  ../objects/lightobject.h ../objects/bluelightobject.h \
  ../objects/redlightobject.h ../sensor.h ../actuator.h ../controller.h \
  ../arena.h ../sensors/contactsensor.h ../sensors/reallightsensor.h \
+ ../sensors/realbluelightsensor.h ../sensors/realredlightsensor.h \
  ../sensors/groundsensor.h ../sensors/groundmemorysensor.h \
  ../sensors/batterysensor.h ../sensors/encodersensor.h ../random.h \
  ../actuators/wheelsactuator.h ../actuator.h iri1controller.h \
@@ -587,6 +588,8 @@ iri1controller.o: iri1controller.cpp /usr/include/stdc-predef.h \
 ../arena.h:
 ../sensors/contactsensor.h:
 ../sensors/reallightsensor.h:
+../sensors/realbluelightsensor.h:
+../sensors/realredlightsensor.h:
 ../sensors/groundsensor.h:
 ../sensors/groundmemorysensor.h:
 ../sensors/batterysensor.h:

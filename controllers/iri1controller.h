@@ -5,6 +5,7 @@
 /******************************************************************************/
 
 #include "controller.h"
+#include "arena.h"
 
 /******************************************************************************/
 /******************************************************************************/
@@ -25,12 +26,14 @@ private:
 		CWheelsActuator* m_acWheels;
     CEpuckProximitySensor* m_seProx;
 		CRealLightSensor* m_seLight;
+		CRealBlueLightSensor* m_seBlueLight;
+		CRealRedLightSensor* m_seRedLight;
 		CContactSensor* m_seContact;
 		CGroundSensor* m_seGround;
 		CGroundMemorySensor* m_seGroundMemory;
 		CBatterySensor* m_seBattery;   
 		CEncoderSensor* m_seEncoder;  
-
+    
 		/* Global Variables */
 		double 		m_fLeftSpeed;
 		double 		m_fRightSpeed;
