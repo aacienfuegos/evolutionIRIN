@@ -157,6 +157,7 @@ class CArena : public CGeometry
 		virtual bool GetNearestBlueLightInSector ( dVector2 Pos, double f_orientation, double f_aperture, double range, dVector2 *light_position, double *nearestDistance, double *relativeAngle);
 		virtual bool GetNearestRedLightInSector ( dVector2 Pos, double f_orientation, double f_aperture, double range, dVector2 *light_position, double *nearestDistance, double *relativeAngle);
 		
+		virtual void PickUpNearestBlueLight (dVector2 Pos);
 		
 		/* BLUE LIGHT STUFF */
 		/* Add a light obhect */

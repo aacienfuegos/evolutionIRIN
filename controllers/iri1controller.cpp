@@ -34,7 +34,6 @@
 /******************** Controller **************/
 #include "iri1controller.h"
 
-
 /******************************************************************************/
 /******************************************************************************/
 
@@ -47,7 +46,7 @@ double    mapLengthX        = 3.0;
 double    mapLengthY        = 3.0;
 int       robotStartGridX   = 10; 
 int       robotStartGridY   = 10;
-double    blue_memory = 0.0;
+double    blue_actual = 0.0;
 
 const   int n=mapGridX; // horizontal size of the map
 const   int m=mapGridY; // vertical size size of the map
@@ -188,7 +187,7 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 	/* Set encoder Sensor */
 	m_seEncoder = (CEncoderSensor*) m_pcEpuck->GetSensor (SENSOR_ENCODER);
   m_seEncoder->InitEncoderSensor(m_pcEpuck);
-
+  
 	
 	/* Initialize Motor Variables */
 	m_fLeftSpeed  = 0.0;
@@ -526,7 +525,6 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 	
 	/* Leer Sensores de Luz */
 	double* light = m_seLight->GetSensorReading(m_pcEpuck);
-  double* blue_light = m_seBlueLight->GetSensorReading(m_pcEpuck);
 	
 	double fMaxLight = 0.0;
 	const double* lightDirections = m_seLight->GetSensorDirections();
@@ -558,26 +556,10 @@ void CIri1Controller::Forage ( unsigned int un_priority )
   m_fActivationTable[un_priority][0] = fRepelent;
   m_fActivationTable[un_priority][1] = 1 - fMaxLight;
   
-  double blue_actual = 0.0;
-
-  for ( int i = 0 ; i < sizeof(blue_light); i ++ ){
-    if(blue_light[i] != 0) blue_actual = 1.0;
-  }
-  //blue_actual += m_nForageStatus;
-  if(blue_actual>1) blue_actual = 1;
-
-  if(blue_actual == 1.0){
-    blue_memory =1.0;
-  }
-   if(groundMemory[0] == 0.0){
-    blue_memory =0.0;
-  }
-  std::cout << blue_actual;
-  std::cout << blue_memory;
   std::cout << m_nForageStatus;
   
   /* If with a virtual puck */
-  if ( groundMemory[0] * fBattToForageInhibitor * fGoalToForageInhibitor * blue_memory == 1.0)
+  if ( groundMemory[0] * fBattToForageInhibitor * fGoalToForageInhibitor * m_nForageStatus == 1.0)
 	{
 		/* Set Leds to BLUE */
 		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLUE);
@@ -603,8 +585,18 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
 {
 	/* Leer Encoder */
 	double* encoder = m_seEncoder->GetSensorReading(m_pcEpuck);
+	/* Leer Sensores de Suelo */
+  double* ground = m_seGround->GetSensorReading(m_pcEpuck);
 	/* Leer Sensores de Suelo Memory */
   double* groundMemory = m_seGroundMemory->GetSensorReading(m_pcEpuck);
+	/* Leer Sensores de Luz Azul */
+  double* blue_light = m_seBlueLight->GetSensorReading(m_pcEpuck);
+  
+  double blue_actual = 0.0;
+
+  for ( int i = 0 ; i < sizeof(blue_light); i ++ ){
+    if(blue_light[i] != 0) blue_actual = 1.0;
+  }
   
   CalcPositionAndOrientation (encoder);
 
@@ -637,11 +629,10 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NO_OBSTACLE;
  
   /* If looking for nest and arrived to nest */
-  if ( m_nForageStatus == 1 && groundMemory[0] == 0)
+  if ( m_nForageStatus == 1 && groundMemory[0] == 0 )
   {
     /* update forage status */
     m_nForageStatus = 0;
-
     /* Asumme Path Planning is done */
     m_nPathPlanningDone = 0;
     /* Restart PathPlanning state */
@@ -659,7 +650,7 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
   }//end looking for nest
   
   /* If looking for prey and prey graspped */
-  else if ( m_nForageStatus == 0 && groundMemory[0] == 1 && blue_memory == 1)
+  else if ( m_nForageStatus == 0 && ground[0] == 0.5 && blue_actual == 1)
   {
     /* Update forage Status */
     m_nForageStatus = 1;
@@ -674,6 +665,11 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     /* Update nest grid */
     m_nPreyGridX = m_nRobotActualGridX;
     m_nPreyGridY = m_nRobotActualGridY;
+    
+    /* Pick Up vaccine */
+		m_seBlueLight->PickUpNearestLight();
+    
+    
     /* DEBUG */
     PrintMap(&onlineMap[0][0]);
     /* DEBUG */

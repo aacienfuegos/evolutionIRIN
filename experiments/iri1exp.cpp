@@ -156,6 +156,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 		m_nBlueLightObjectNumber = 0;
 		m_pcvBlueLightObjects = new dVector2[m_nBlueLightObjectNumber];
+		m_nVaccines = new int[m_nBlueLightObjectNumber];
 
 		m_nNumberOfGroundArea = 0;
 		m_vGroundAreaCenter = new dVector2[m_nNumberOfGroundArea];
@@ -213,12 +214,15 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 		m_nBlueLightObjectNumber = getInt('=', pfile);
 		/* Create Objects */
 		m_pcvBlueLightObjects = new dVector2[m_nBlueLightObjectNumber];
+		m_nVaccines = new int[m_nBlueLightObjectNumber];
 		for (int i = 0; i < m_nBlueLightObjectNumber; i++)
 		{
 			/* Get X position */
 			m_pcvBlueLightObjects[i].x = getDouble('=', pfile);
 			/* Get Y Position */
 			m_pcvBlueLightObjects[i].y = getDouble('=', pfile);
+			/* Get number of Vaccines */
+			m_nVaccines[i] = getInt('=', pfile);
 		}
 
 		/* Red Lights */
@@ -329,6 +333,7 @@ CArena *CIri1Exp::CreateArena()
 		sprintf(pchTemp, "BlueLightObject%d", i);
 		CBlueLightObject *pcBlueLightObject = new CBlueLightObject(pchTemp);
 		pcBlueLightObject->SetCenter(m_pcvBlueLightObjects[i]);
+		pcBlueLightObject->SetVaccines(m_nVaccines[i]);
 		pcArena->AddBlueLightObject(pcBlueLightObject);
 	}
 

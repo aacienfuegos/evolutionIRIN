@@ -2,10 +2,19 @@
 %%%%%%%%%%%%%%%% EXTRA %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NUMBER OF ROBOTS								= 1
+NUMBER OF ROBOTS								= 4
 ROBOT 1: X POSITION (meters)		= 0.075
 ROBOT 1: Y POSITION (meters)		= -0.075
 ROBOT 1: ORIENTATION (radians) 	= 0.0
+ROBOT 2: X POSITION (meters)		= 0.075
+ROBOT 2: Y POSITION (meters)		= 0.075
+ROBOT 2: ORIENTATION (radians) 	= 0.0
+ROBOT 3: X POSITION (meters)		= -0.075
+ROBOT 3: Y POSITION (meters)		= -0.075
+ROBOT 3: ORIENTATION (radians) 	= 0.0
+ROBOT 4: X POSITION (meters)		= -0.075
+ROBOT 4: Y POSITION (meters)		= 0.075
+ROBOT 4: ORIENTATION (radians) 	= 0.0
 WRITE TO FILE (0 No, 1 YES )		= 1
 RUN TIME												= 10000
 
@@ -19,12 +28,14 @@ LIGHT 1 Y POSITION (meters)					      = -1.5
 NUMBER OF BLUE LIGHT OBJECTS 							= 3
 BLUE LIGHT 1 X POSITION (meters) 				      = 1
 BLUE LIGHT 1 Y POSITION (meters)					      = -1
+BLUE LIGHT 1 VACCINES (integer)                     = 2
 BLUE LIGHT 2 X POSITION (meters) 				      = -1
 BLUE LIGHT 2 Y POSITION (meters)					      = 1
+BLUE LIGHT 2 VACCINES (integer)                     = 3
 BLUE LIGHT 3 X POSITION (meters) 				      = -1
-BLUE LIGHT 3 Y POSITION (meters)					      = 0.5
+BLUE LIGHT 3 Y POSITION (meters)                    = 0.5
+BLUE LIGHT 3 VACCINES (integer)                     = 1
 NUMBER OF RED LIGHT OBJECTS 							= 0
-
 NUMBER OF GROUND AREA 										= 5
 GROUND AREA 1 X POSITION	(meters)					= 1.3
 GROUND AREA 1 Y POSITION	(meters)					= 1.3
@@ -53,7 +64,7 @@ GROUND AREA 5 COLOR (0.0 Black, 0.5 Grey)		= 0.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LIGHT SENSOR RANGE (meters)						= 4.5
-BLUE LIGHT SENSOR RANGE (meters)			= 0.5
+BLUE LIGHT SENSOR RANGE (meters)			= 0.4
 RED LIGHT SENSOR RANGE (meters)				= 0.1
 BATTERY SENSOR RANGE (meters)					= 0.5
 BATTERY CHARGE COEF 									= 0.01

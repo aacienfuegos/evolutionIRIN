@@ -38,6 +38,7 @@ private:
 		
 		int m_nBlueLightObjectNumber;
 		dVector2 *m_pcvBlueLightObjects;
+		int * m_nVaccines;
 		
 		int m_nRedLightObjectNumber;
 		dVector2 *m_pcvRedLightObjects;

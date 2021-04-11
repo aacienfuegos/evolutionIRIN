@@ -123,3 +123,16 @@ void CRealBlueLightSensor::SwitchNearestLight ( int n_value )
 
 /******************************************************************************/
 /******************************************************************************/
+
+void CRealBlueLightSensor::PickUpNearestLight(void)
+{
+	dVector2 vPosition;
+	vPosition.x = (m_pcEpuck->GetPosition()).x;
+	vPosition.y = (m_pcEpuck->GetPosition()).y;
+
+	m_pcArena->PickUpNearestBlueLight(vPosition);
+}
+
+/******************************************************************************/
+/******************************************************************************/
+

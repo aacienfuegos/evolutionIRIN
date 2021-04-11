@@ -10,8 +10,7 @@ CBlueLightObject::CBlueLightObject(const char* pch_name) : CGeometry(pch_name)
 	m_fIntRadius=0.0;
 	m_fExtRadius=0.0;
 	m_fGrey=1.0;
-	m_nVaccines = 1;
-
+	
 	m_nActivation = true;
 }
 
@@ -109,6 +108,17 @@ void CBlueLightObject::Switch ( int n_value )
 /******************************************************************************/
 /******************************************************************************/
 
+void CBlueLightObject::PickUp ( int n_value )
+{
+	if ( n_value == 0)
+		m_nActivation = false;
+	else 
+		m_nActivation = true;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
 int CBlueLightObject::GetStatus ( void )
 {
 	return m_nActivation;
@@ -140,19 +150,4 @@ int CBlueLightObject::GetTiming ( unsigned int n_step_number )
 	/* default return true */
 	return m_nActivation;
 
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-void CBlueLightObject::SetVaccines(int nVaccines){
-	m_nVaccines=nVaccines;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-int CBlueLightObject::GetVaccines ( void )
-{
-	return m_nVaccines;
 }

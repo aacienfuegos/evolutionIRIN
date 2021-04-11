@@ -697,6 +697,39 @@ void CArena::SwitchNearestBlueLight (dVector2 Pos, int n_value)
 /*****************************************************************************************************/
 /*****************************************************************************************************/
 
+void CArena::PickUpNearestBlueLight (dVector2 Pos)
+{
+	vector<CBlueLightObject*>::iterator it=m_vecBlueLightObject.begin();
+	
+	CBlueLightObject* light;
+	double nearestDistance = 10000;
+	bool lightFound = false;
+	/* get all the Light Objects */
+	while(it!=m_vecBlueLightObject.end()){
+		/* Get the Light Object Position */
+		dVector2 lightObjectPos;
+		(*it)->GetCenter(&lightObjectPos);
+		/* Check the distance to the robot */
+		double distance = sqrt( pow( (lightObjectPos.x - Pos.x), 2 ) + pow( (lightObjectPos.y - Pos.y), 2 ));
+		/* If distance in range */
+		if( distance < nearestDistance ){
+			light = (CBlueLightObject*) (*it);
+			nearestDistance = distance;
+		}
+		it++;
+		lightFound = true;
+	}
+
+	int nVaccines = light->GetVaccines();
+	if ( lightFound == true )
+		nVaccines -= 1;
+		if(nVaccines<=0) light->Switch(0);
+		light->SetVaccines(nVaccines);
+}
+
+/*****************************************************************************************************/
+/*****************************************************************************************************/
+
 vector<CRedLightObject*> CArena::GetRedLightObject(){
 	return m_vecRedLightObject;
 }

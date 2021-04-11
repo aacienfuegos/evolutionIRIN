@@ -37,6 +37,9 @@ public:
 
 	int GetTiming ( unsigned int n_step_number );
 
+	void SetVaccines(int nVaccines);
+	int GetVaccines(void);
+
   void Reset ( void );
 
 private:
@@ -45,6 +48,8 @@ private:
 	float m_fIntRadius;
 	float m_fExtRadius;
 	float m_fHeight;
+	
+	int m_nVaccines;
 	
 	int m_nActivation;
 };
