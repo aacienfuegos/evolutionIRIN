@@ -56,9 +56,9 @@ private:
 		float m_fBlueLightSensorRange;
 		float m_fRedLightSensorRange;
 		
-		double m_fBatterySensorRange;
-		double m_fBatteryChargeCoef;
-		double m_fBatteryDischargeCoef;
+		double * m_fBatterySensorRange;
+		double * m_fBatteryChargeCoef;
+		double * m_fBatteryDischargeCoef;
 		
 		double m_fBlueBatterySensorRange;
 		double m_fBlueBatteryChargeCoef;
@@ -69,6 +69,9 @@ private:
 		double m_fRedBatteryDischargeCoef;
 		
     double m_fEncoderSensorError;
+
+	// Auxiliary
+	int nRobotIt;
 };
 
 /******************************************************************************/

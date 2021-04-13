@@ -136,6 +136,8 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 	m_fLightSensorRange = 1.0;	   //1 meter
 	m_fBlueLightSensorRange = 1.0; //1 meter
 
+	nRobotIt = 0;
+
 	/* If there is not a parameter file input get default values*/
 	if (paramsFile == NULL)
 	{
@@ -265,13 +267,22 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 		/* Get Red Light Range */
 		m_fRedLightSensorRange = getDouble('=', pfile);
-
+		
+		m_fBatterySensorRange = new double[m_nRobotsNumber];
+		m_fBatteryChargeCoef = new double[m_nRobotsNumber];
+		m_fBatteryDischargeCoef = new double[m_nRobotsNumber];
+		for (int i = 0; i < m_nRobotsNumber; i++)
+		{
+			m_fBatterySensorRange[i] = getDouble('=', pfile);
+			m_fBatteryChargeCoef[i] = getDouble('=', pfile);
+			m_fBatteryDischargeCoef[i] = getDouble('=', pfile);
+		}
 		/* Get Battery load range */
-		m_fBatterySensorRange = getDouble('=', pfile);
+		//m_fBatterySensorRange = getDouble('=', pfile);
 		/* Get batttery charge coef */
-		m_fBatteryChargeCoef = getDouble('=', pfile);
+		//m_fBatteryChargeCoef = getDouble('=', pfile);
 		/* Get batttery charge coef */
-		m_fBatteryDischargeCoef = getDouble('=', pfile);
+		//m_fBatteryDischargeCoef = getDouble('=', pfile);
 
 		/* Get Blue Battery load range */
 		m_fBlueBatterySensorRange = getDouble('=', pfile);
@@ -424,8 +435,14 @@ void CIri1Exp::AddSensors(CEpuck *pc_epuck)
 
 	//Battery Sensor
 	CSensor *pcBatterySensor = NULL;
-	pcBatterySensor = new CBatterySensor("Battery Sensor", m_fBatterySensorRange, m_fBatteryChargeCoef, m_fBatteryDischargeCoef);
+	double fBatterySensorRange = m_fBatterySensorRange[nRobotIt];
+	double fBatteryChargeCoef = m_fBatteryChargeCoef[nRobotIt];
+	double fBatteryDischargeCoef = m_fBatteryDischargeCoef[nRobotIt];
+	pcBatterySensor = new CBatterySensor("Battery Sensor", fBatterySensorRange, fBatteryChargeCoef, fBatteryDischargeCoef);
 	pc_epuck->AddSensor(pcBatterySensor);
+	nRobotIt++;
+	//pcBatterySensor = new CBatterySensor("Battery Sensor", m_fBatterySensorRange, m_fBatteryChargeCoef, m_fBatteryDischargeCoef);
+	//pc_epuck->AddSensor(pcBatterySensor);
 
 	//Blue Battery Sensor
 	CSensor *pcBlueBatterySensor = NULL;
@@ -456,7 +473,7 @@ void CIri1Exp::SetController(CEpuck *pc_epuck)
 	char pchTemp[128];
 	sprintf(pchTemp, "Iri1");
 	CController *pcController = new CIri1Controller(pchTemp, pc_epuck, m_nWriteToFile);
-	pc_epuck->SetControllerType(CONTROLLER_IRI1);
+	pc_epuck->SetControllerType(CONTROLLER_IRI1); // aqui puedes asociar diversos controladores btw, que lo hablamos el otro dia
 	pc_epuck->SetController(pcController);
 }
 
