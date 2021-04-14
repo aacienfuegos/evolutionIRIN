@@ -6,15 +6,19 @@ NUMBER OF ROBOTS								= 4
 ROBOT 1: X POSITION (meters)		= 0.075
 ROBOT 1: Y POSITION (meters)		= -0.075
 ROBOT 1: ORIENTATION (radians) 	= 0.0
+ROBOT 1: JOB (-1 takes, 1 gives) 	= -1
 ROBOT 2: X POSITION (meters)		= 0.075
 ROBOT 2: Y POSITION (meters)		= 0.075
 ROBOT 2: ORIENTATION (radians) 	= 0.0
+ROBOT 2: JOB (0 iri1Controller, 1 iri2Controller) 	= -1
 ROBOT 3: X POSITION (meters)		= -0.075
 ROBOT 3: Y POSITION (meters)		= -0.075
 ROBOT 3: ORIENTATION (radians) 	= 0.0
+ROBOT 3: JOB (0 iri1Controller, 1 iri2Controller) 	= 1
 ROBOT 4: X POSITION (meters)		= -0.075
 ROBOT 4: Y POSITION (meters)		= 0.075
 ROBOT 4: ORIENTATION (radians) 	= 0.0
+ROBOT 4: CONTROLLER (0 iri1Controller, 1 iri2Controller) 	= 1
 WRITE TO FILE (0 No, 1 YES )		= 1
 RUN TIME												= 10000
 
@@ -22,20 +26,22 @@ RUN TIME												= 10000
 %%%%%%%%%%%%% ENVIRONMENT %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NUMBER OF LIGHT OBJECTS  									= 1
+NUMBER OF LIGHT OBJECTS  							= 1
 LIGHT 1 X POSITION (meters) 				      = -1.5
 LIGHT 1 Y POSITION (meters)					      = -1.5
-NUMBER OF BLUE LIGHT OBJECTS 							= 3
-BLUE LIGHT 1 X POSITION (meters) 				      = 1
-BLUE LIGHT 1 Y POSITION (meters)					      = -1
-BLUE LIGHT 1 VACCINES (integer)                     = 2
-BLUE LIGHT 2 X POSITION (meters) 				      = -1
-BLUE LIGHT 2 Y POSITION (meters)					      = 1
-BLUE LIGHT 2 VACCINES (integer)                     = 3
-BLUE LIGHT 3 X POSITION (meters) 				      = -1
-BLUE LIGHT 3 Y POSITION (meters)                    = 0.5
-BLUE LIGHT 3 VACCINES (integer)                     = 2
-NUMBER OF RED LIGHT OBJECTS 							= 0
+NUMBER OF BLUE LIGHT OBJECTS 						= 3
+BLUE LIGHT 1 X POSITION (meters) 			      = 1
+BLUE LIGHT 1 Y POSITION (meters)			      = -1
+BLUE LIGHT 1 VACCINES CAPACITY (integer)          = 4
+BLUE LIGHT 1 VACCINES THRESHOLD (integer)         = 3
+BLUE LIGHT 2 X POSITION (meters) 			      = -1
+BLUE LIGHT 2 Y POSITION (meters)          	      = 1
+BLUE LIGHT 2 VACCINES CAPACITY (integer)          = 5
+BLUE LIGHT 2 VACCINES THRESHOLD (integer)         = 4
+BLUE LIGHT 3 X POSITION (meters) 			      = -1
+BLUE LIGHT 3 Y POSITION (meters)                  = 0.5
+BLUE LIGHT 3 VACCINES CAPACITY (integer)          = 6
+BLUE LIGHT 3 VACCINES THRESHOLD (integer)         = 5
 NUMBER OF GROUND AREA 										= 5
 GROUND AREA 1 X POSITION	(meters)					= 1.3
 GROUND AREA 1 Y POSITION	(meters)					= 1.3
@@ -64,21 +70,22 @@ GROUND AREA 5 COLOR (0.0 Black, 0.5 Grey)		= 0.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LIGHT SENSOR RANGE (meters)						= 4.5
-BLUE LIGHT SENSOR RANGE (meters)			= 0.4
-RED LIGHT SENSOR RANGE (meters)				= 0.1
+BLUE LIGHT SENSOR RANGE (meters)			= 0.2
+RED LIGHT SENSOR RANGE (meters)			= 0.2
+
 
 ROBOT 1 BATTERY SENSOR RANGE (meters)					= 0.5
 ROBOT 1 BATTERY CHARGE COEF 									= 0.01
-ROBOT 1 BATTERY DISCHARGE COEF								= 0.1
+ROBOT 1 BATTERY DISCHARGE COEF								= 0.0001
 ROBOT 2 BATTERY SENSOR RANGE (meters)					= 0.5
 ROBOT 2 BATTERY CHARGE COEF 									= 0.01
-ROBOT 2 BATTERY DISCHARGE COEF								= 0.0001
+ROBOT 2 BATTERY DISCHARGE COEF								= 0.0002
 ROBOT 3 BATTERY SENSOR RANGE (meters)					= 0.5
 ROBOT 3 BATTERY CHARGE COEF 									= 0.01
-ROBOT 3 BATTERY DISCHARGE COEF								= 0.0001
+ROBOT 3 BATTERY DISCHARGE COEF								= 0.0003
 ROBOT 4 BATTERY SENSOR RANGE (meters)					= 0.5
 ROBOT 4 BATTERY CHARGE COEF 									= 0.01
-ROBOT 4 BATTERY DISCHARGE COEF								= 0.0001
+ROBOT 4 BATTERY DISCHARGE COEF								= 0.0004
 
 BLUE BATTERY SENSOR RANGE (meters)		= 0.5
 BLUE BATTERY CHARGE COEF 							= 0.01

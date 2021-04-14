@@ -35,6 +35,7 @@
 #include "wheelsactuator.h"
 
 /******************** Controllers **************/
+/* #include "iri2controller.h" */
 #include "iri1controller.h"
 
 using namespace std;
@@ -135,6 +136,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 	m_fLightSensorRange = 1.0;	   //1 meter
 	m_fBlueLightSensorRange = 1.0; //1 meter
+	m_fRedLightSensorRange = 1.0; //1 meter
 
 	nRobotIt = 0;
 
@@ -145,11 +147,13 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 		SetNumberOfEpucks(m_nRobotsNumber);
 		m_pcvRobotPositions = new dVector2[m_nRobotsNumber];
 		m_fRobotOrientations = new double[m_nRobotsNumber];
+		m_nJob = new int[m_nRobotsNumber];
 		for (int i = 0; i < m_nRobotsNumber; i++)
 		{
 			m_pcvRobotPositions[i].x = 0.0;
 			m_pcvRobotPositions[i].y = 0.0;
 			m_fRobotOrientations[i] = 0.0;
+			m_nJob[i] = -1;
 		}
 		m_nRunTime = 10000;
 
@@ -186,11 +190,14 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 		/* For each robot get position and orientation */
 		m_pcvRobotPositions = new dVector2[m_nRobotsNumber];
 		m_fRobotOrientations = new double[m_nRobotsNumber];
+		m_nJob = new int[m_nRobotsNumber];
 		for (int i = 0; i < m_nRobotsNumber; i++)
 		{
 			m_pcvRobotPositions[i].x = getDouble('=', pfile);
 			m_pcvRobotPositions[i].y = getDouble('=', pfile);
 			m_fRobotOrientations[i] = getDouble('=', pfile);
+			m_nJob[i] = getInt('=', pfile);
+
 		}
 
 		/* Get write to file flag */
@@ -218,6 +225,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 		/* Create Objects */
 		m_pcvBlueLightObjects = new dVector2[m_nBlueLightObjectNumber];
 		m_nVaccinesCapacity = new int[m_nBlueLightObjectNumber];
+		m_nVaccinesThreshold = new int[m_nBlueLightObjectNumber];
 		for (int i = 0; i < m_nBlueLightObjectNumber; i++)
 		{
 			/* Get X position */
@@ -226,19 +234,22 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 			m_pcvBlueLightObjects[i].y = getDouble('=', pfile);
 			/* Get number of Vaccines Capacity */
 			m_nVaccinesCapacity[i] = getInt('=', pfile);
+			/* Get number of Vaccines Threshold */
+			m_nVaccinesThreshold[i] = getInt('=', pfile);
+			std::cout << m_nVaccinesThreshold[i];
 		}
 
 		/* Red Lights */
 		/* Get Red Light Objects Number */
-		m_nRedLightObjectNumber = getInt('=', pfile);
+		m_nRedLightObjectNumber = m_nBlueLightObjectNumber;
 		/* Create Objects */
 		m_pcvRedLightObjects = new dVector2[m_nRedLightObjectNumber];
 		for (int i = 0; i < m_nRedLightObjectNumber; i++)
 		{
 			/* Get X position */
-			m_pcvRedLightObjects[i].x = getDouble('=', pfile);
+			m_pcvRedLightObjects[i].x = m_pcvBlueLightObjects[i].x;
 			/* Get Y Position */
-			m_pcvRedLightObjects[i].y = getDouble('=', pfile);
+			m_pcvRedLightObjects[i].y = m_pcvBlueLightObjects[i].y;
 		}
 
 		/* Ground Areas */
@@ -347,6 +358,7 @@ CArena *CIri1Exp::CreateArena()
 		pcBlueLightObject->SetCenter(m_pcvBlueLightObjects[i]);
 		pcBlueLightObject->SetVaccinesCapacity(m_nVaccinesCapacity[i]);
 		pcBlueLightObject->SetVaccines(m_nVaccinesCapacity[i]);
+		pcBlueLightObject->SetVaccinesThreshold(m_nVaccinesThreshold[i]);
 		pcArena->AddBlueLightObject(pcBlueLightObject);
 	}
 
@@ -357,6 +369,9 @@ CArena *CIri1Exp::CreateArena()
 		sprintf(pchTemp, "RedLightObject%d", i);
 		CRedLightObject *pcRedLightObject = new CRedLightObject(pchTemp);
 		pcRedLightObject->SetCenter(m_pcvRedLightObjects[i]);
+		/* pcRedLightObject->Switch(0); */
+		pcRedLightObject->SetVaccines(m_nVaccinesThreshold[i]);
+		pcRedLightObject->SetVaccinesThreshold(m_nVaccinesThreshold[i]);
 		pcArena->AddRedLightObject(pcRedLightObject);
 	}
 
@@ -440,7 +455,6 @@ void CIri1Exp::AddSensors(CEpuck *pc_epuck)
 	double fBatteryDischargeCoef = m_fBatteryDischargeCoef[nRobotIt];
 	pcBatterySensor = new CBatterySensor("Battery Sensor", fBatterySensorRange, fBatteryChargeCoef, fBatteryDischargeCoef);
 	pc_epuck->AddSensor(pcBatterySensor);
-	nRobotIt++;
 	//pcBatterySensor = new CBatterySensor("Battery Sensor", m_fBatterySensorRange, m_fBatteryChargeCoef, m_fBatteryDischargeCoef);
 	//pc_epuck->AddSensor(pcBatterySensor);
 
@@ -473,8 +487,24 @@ void CIri1Exp::SetController(CEpuck *pc_epuck)
 	char pchTemp[128];
 	sprintf(pchTemp, "Iri1");
 	CController *pcController = new CIri1Controller(pchTemp, pc_epuck, m_nWriteToFile);
-	pc_epuck->SetControllerType(CONTROLLER_IRI1); // aqui puedes asociar diversos controladores btw, que lo hablamos el otro dia
+	pc_epuck->SetControllerType(CONTROLLER_IRI1);
 	pc_epuck->SetController(pcController);
+
+	/* if(m_nControllerType[nRobotIt] == 1){ */
+	/* 	sprintf(pchTemp, "Iri2"); */
+	/* 	CController *pcController = new CIri2Controller(pchTemp, pc_epuck, m_nWriteToFile); */
+	/* 	pc_epuck->SetControllerType(CONTROLLER_IRI2); */
+	/* 	pc_epuck->SetController(pcController); */
+	/* } else if(m_nControllerType[nRobotIt] == 0) { */
+	/* 	sprintf(pchTemp, "Iri1"); */
+	/* 	CController *pcController = new CIri1Controller(pchTemp, pc_epuck, m_nWriteToFile); */
+	/* 	pc_epuck->SetControllerType(CONTROLLER_IRI1); */
+	/* 	pc_epuck->SetController(pcController); */
+	/* } else { */
+	/* 	printf("Controller chosen does not exist"); */
+	/* 	exit(0); */
+	/* } */
+	nRobotIt++;
 }
 
 /******************************************************************************/
@@ -488,6 +518,7 @@ void CIri1Exp::CreateAndAddEpucks(CSimulator *pc_simulator)
 	{
 		sprintf(label, "epuck%0.4d", i);
 		CEpuck *pcEpuck = CreateEpuck(label, m_pcvRobotPositions[i].x, m_pcvRobotPositions[i].y, m_fRobotOrientations[i]);
+		pcEpuck->SetJob(m_nJob[i]);
 		pc_simulator->AddEpuck(pcEpuck);
 		pc_simulator->SetTimeLimit(m_nRunTime);
 	}

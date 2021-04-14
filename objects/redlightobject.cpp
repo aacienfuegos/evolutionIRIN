@@ -11,7 +11,13 @@ CRedLightObject::CRedLightObject(const char* pch_name) : CGeometry(pch_name)
 	m_fExtRadius=0.0;
 	m_fGrey=1.0;
 
-	m_nActivation = true;
+	m_nVaccinesCapacity = 1;
+	m_nVaccines = m_nVaccinesCapacity;
+	m_nVaccinesThreshold = 0;
+	m_nOutStepNumber=0;
+	RECOVERY_TIME = 1000;
+
+	m_nActivation = false;
 }
 
 /******************************************************************************/
@@ -118,7 +124,7 @@ int CRedLightObject::GetStatus ( void )
 
 void CRedLightObject::Reset ( void )
 {
-  m_nActivation = true;
+  m_nActivation = false;
 }
 
 /******************************************************************************/
@@ -127,14 +133,97 @@ void CRedLightObject::Reset ( void )
 int CRedLightObject::GetTiming ( unsigned int n_step_number )
 {
 
- printf("Light %s\n",GetName());
+ /* printf("Light %s\n",GetName()); */
 	/* Create sequence */
-	if ( !(n_step_number % 110) )
-	{
+	//if ( !(n_step_number % 110) )
+	//{
 		/* toggle light */
-		m_nActivation ^= 0x1;
-	}
+	//	m_nActivation ^= 0x1;
+	//}
 
 	/* default return true */
 	return m_nActivation;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+void CRedLightObject::SetVaccines(int nVaccines){
+	m_nVaccines=nVaccines;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CRedLightObject::GetVaccines ( void )
+{
+	return m_nVaccines;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+void CRedLightObject::SetVaccinesThreshold(int nVaccinesThreshold){
+	m_nVaccinesThreshold=nVaccinesThreshold;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CRedLightObject::GetVaccinesThreshold ( void )
+{
+	return m_nVaccinesThreshold;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+void CRedLightObject::SetVaccinesCapacity (int nVaccinesCapacity)
+{
+	m_nVaccinesCapacity = nVaccinesCapacity;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CRedLightObject::GetVaccinesCapacity ( void )
+{
+	return m_nVaccinesCapacity;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+void CRedLightObject::SetOutStepNumber(unsigned int n_step_number){
+	m_nOutStepNumber = n_step_number;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CRedLightObject::GetOutStepNumber ( void )
+{
+	return m_nOutStepNumber;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CRedLightObject::ResetVaccines ( unsigned int n_step_number)
+{
+  if(m_nActivation) m_nOutStepNumber = n_step_number;
+  if ( (n_step_number - m_nOutStepNumber) >= RECOVERY_TIME )
+  {
+    /* toggle light */
+    m_nActivation = 1;
+	m_nVaccines = m_nVaccinesCapacity;
+	
+	// Reset Out Step Number
+	m_nOutStepNumber = n_step_number;
+
+  }
+
+	/* default return true */
+	return m_nActivation;
+
 }

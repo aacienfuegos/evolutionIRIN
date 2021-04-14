@@ -310,11 +310,11 @@ void CArena::SimulationStep(unsigned int n_step_number,
 		}
 
 		/* Get blue light recovery vaccines */
-		vector<CBlueLightObject*>::iterator blue_it=m_vecBlueLightObject.begin();
-		while(blue_it!=m_vecBlueLightObject.end()){
-			(*blue_it)->ResetVaccines(n_step_number);
-			blue_it++;
-		}
+		/* vector<CBlueLightObject*>::iterator blue_it=m_vecBlueLightObject.begin(); */
+		/* while(blue_it!=m_vecBlueLightObject.end()){ */
+		/* 	(*blue_it)->ResetVaccines(n_step_number); */
+		/* 	blue_it++; */
+		/* } */
 }
 
 /******************************************************************************/
@@ -704,43 +704,6 @@ void CArena::SwitchNearestBlueLight (dVector2 Pos, int n_value)
 /*****************************************************************************************************/
 /*****************************************************************************************************/
 
-void CArena::PickUpNearestBlueLight (dVector2 Pos)
-{
-	vector<CBlueLightObject*>::iterator it=m_vecBlueLightObject.begin();
-	
-	CBlueLightObject* light;
-	double nearestDistance = 10000;
-	bool lightFound = false;
-	/* get all the Light Objects */
-	while(it!=m_vecBlueLightObject.end()){
-		/* Get the Light Object Position */
-		dVector2 lightObjectPos;
-		(*it)->GetCenter(&lightObjectPos);
-		/* Check the distance to the robot */
-		double distance = sqrt( pow( (lightObjectPos.x - Pos.x), 2 ) + pow( (lightObjectPos.y - Pos.y), 2 ));
-		/* If distance in range */
-		if( distance < nearestDistance ){
-			light = (CBlueLightObject*) (*it);
-			nearestDistance = distance;
-		}
-		it++;
-		lightFound = true;
-	}
-
-	int nVaccines = light->GetVaccines();
-	printf("-------------------------------------\n");
-	std:cout << nVaccines;
-	if ( lightFound == true )
-		nVaccines -= 1;
-		if(nVaccines<=0) {
-			light->Switch(0);
-		}
-		light->SetVaccines(nVaccines);
-}
-
-/*****************************************************************************************************/
-/*****************************************************************************************************/
-
 vector<CRedLightObject*> CArena::GetRedLightObject(){
 	return m_vecRedLightObject;
 }
@@ -833,4 +796,112 @@ void CArena::SwitchNearestRedLight (dVector2 Pos, int n_value)
 
 	if ( lightFound == true )
 		light->Switch(n_value);
+}
+
+/*****************************************************************************************************/
+/*****************************************************************************************************/
+
+void CArena::PickUpNearestWarehouseBlue (dVector2 Pos, int nNewVaccines)
+{
+	bool lightFound = false;
+	double nearestDistance = 10000;
+
+	vector<CBlueLightObject*>::iterator it=m_vecBlueLightObject.begin();
+	CBlueLightObject* light;
+	dVector2 lightObjectPos;
+	
+	/* get all the Light Objects */
+	while(it!=m_vecBlueLightObject.end()){
+		/* Get the Light Object Position */
+		(*it)->GetCenter(&lightObjectPos);
+		/* Check the distance to the robot */
+		double distance = sqrt( pow( (lightObjectPos.x - Pos.x), 2 ) + pow( (lightObjectPos.y - Pos.y), 2 ));
+		/* If distance in range */
+		if( distance < nearestDistance ){
+			light= (CBlueLightObject*) (*it);
+			nearestDistance = distance;
+		}
+		it++;
+		lightFound = true;
+	}
+
+	int nVaccines = light->GetVaccines();
+	int nVaccinesThreshold = light->GetVaccinesThreshold();
+	int nVaccinesCapacity = light->GetVaccinesCapacity();
+
+	if ( lightFound == true )
+		nVaccines += nNewVaccines;
+		light->SetVaccines(nVaccines);
+
+		/* DEBUG */
+		printf("-------BLUE---------\n");
+		printf("Vaccines: "); std::cout << nVaccines; printf("\n");
+		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n");
+		/* DEBUG */
+
+		if (nVaccines > nVaccinesCapacity) {
+			nVaccines = nVaccinesCapacity;
+		} else if(nVaccines <= nVaccinesThreshold) {
+			light->Switch(0);
+			PickUpNearestWarehouseRed(lightObjectPos, nVaccines - nVaccinesThreshold);
+			nVaccines = nVaccinesThreshold;
+		}
+		else if (nVaccines > nVaccinesCapacity) {
+			nVaccines = nVaccinesCapacity;
+		} else {
+			light->Switch(1);
+		}
+		light->SetVaccines(nVaccines);
+}
+
+/*****************************************************************************************************/
+/*****************************************************************************************************/
+
+void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
+{
+	bool lightFound = false;
+	double nearestDistance = 10000;
+	dVector2 lightObjectPos;
+
+	vector<CRedLightObject*>::iterator it=m_vecRedLightObject.begin();
+	CRedLightObject* light;
+	
+	/* get all the Light Objects */
+	while(it!=m_vecRedLightObject.end()){
+		/* Get the Light Object Position */
+		(*it)->GetCenter(&lightObjectPos);
+		/* Check the distance to the robot */
+		double distance = sqrt( pow( (lightObjectPos.x - Pos.x), 2 ) + pow( (lightObjectPos.y - Pos.y), 2 ));
+		/* If distance in range */
+		if( distance < nearestDistance ){
+			light= (CRedLightObject*) (*it);
+			nearestDistance = distance;
+		}
+		it++;
+		lightFound = true;
+	}
+	int nVaccines = light->GetVaccines();
+	int nVaccinesThreshold = light->GetVaccinesThreshold();
+	if ( lightFound )
+		nVaccines += nNewVaccines;
+		light->SetVaccines(nVaccines);
+
+		/* DEBUG */
+		printf("-------RED---------\n");
+		printf("Vaccines: "); std::cout << nVaccines; printf("\n");
+		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		/* DEBUG */
+
+		if(nVaccines <= 0) {
+			light->Switch(0);
+		} else if(nVaccines > nVaccinesThreshold) {
+			light->Switch(0);
+			PickUpNearestWarehouseBlue(lightObjectPos, nVaccines - nVaccinesThreshold);
+			nVaccines = nVaccinesThreshold;
+		} else {
+			printf("Warning: We are running out of vaccines!!\n");
+			light->Switch(true);
+		}
+		light->SetVaccines(nVaccines);
 }

@@ -52,7 +52,9 @@ private:
     int       m_nRobotActualGridX;
     int       m_nRobotActualGridY;
 
-    int       m_nForageStatus;
+    int       m_nForageStatusA;
+    int       m_nForageStatusB;
+
     
     int       m_nNestFound;
     int       m_nNestGridX;

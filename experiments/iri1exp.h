@@ -30,6 +30,7 @@ private:
 		int m_nWriteToFile;
 		dVector2* m_pcvRobotPositions;
 		double* m_fRobotOrientations;
+		int* m_nJob;
 		int m_nRunTime;
 
 		/* Environment */
@@ -39,6 +40,7 @@ private:
 		int m_nBlueLightObjectNumber;
 		dVector2 *m_pcvBlueLightObjects;
 		int * m_nVaccinesCapacity;
+		int * m_nVaccinesThreshold;
 		
 		int m_nRedLightObjectNumber;
 		dVector2 *m_pcvRedLightObjects;

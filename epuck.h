@@ -165,6 +165,10 @@ public:
 	/* COM SENSOR */
 	void 	SetComData ( int n_data);
 	int 	GetComData ( void );
+	
+	/* Job assigned to robot */
+	int GetJob (void);
+	void SetJob (int nJob);
 
 protected:
 	void KeepSpeedWithinBounds();
@@ -222,6 +226,9 @@ protected:
 
 	/* COM SENSOR */
 	int 								m_nComData;
+	
+	/* Job assigned to robot */
+	int m_nJob;
 };
 
 /******************************************************************************/

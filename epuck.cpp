@@ -49,6 +49,7 @@ CEpuck::CEpuck(const char* pch_name, double f_xpos, double f_ypos, double f_rota
 
 	/* COM SENSOR */
 	m_nComData = 0;
+    m_nJob = 0;
 }
 
 /******************************************************************************/
@@ -910,4 +911,16 @@ void CEpuck::SetComData ( int n_data )
 int CEpuck::GetComData ( void )
 {
 	return m_nComData;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+/* Andres and Cris implementation*/
+int CEpuck::GetJob ( void ){   
+    return m_nJob;
+}
+/******************************************************************************/
+/******************************************************************************/
+void CEpuck::SetJob ( int nJob ){
+    m_nJob = nJob;
 }

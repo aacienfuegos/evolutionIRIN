@@ -36,7 +36,7 @@ public:
 		const double* GetSensorDirections( void );
 		
 		void SwitchNearestLight ( int n_value );
-		void PickUpNearestLight ( void );
+		void PickUpNearestLight ( int nJob );
 
 		static unsigned int SENSOR_NUMBER;
 	

@@ -10,8 +10,10 @@ CBlueLightObject::CBlueLightObject(const char* pch_name) : CGeometry(pch_name)
 	m_fIntRadius=0.0;
 	m_fExtRadius=0.0;
 	m_fGrey=1.0;
+
 	m_nVaccinesCapacity = 1;
 	m_nVaccines = m_nVaccinesCapacity;
+	m_nVaccinesThreshold = 0;
 	m_nOutStepNumber=0;
 	RECOVERY_TIME = 1000;
 
@@ -163,6 +165,21 @@ int CBlueLightObject::GetVaccines ( void )
 /******************************************************************************/
 /******************************************************************************/
 
+void CBlueLightObject::SetVaccinesThreshold(int nVaccinesThreshold){
+	m_nVaccinesThreshold=nVaccinesThreshold;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
+int CBlueLightObject::GetVaccinesThreshold ( void )
+{
+	return m_nVaccinesThreshold;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+
 void CBlueLightObject::SetVaccinesCapacity (int nVaccinesCapacity)
 {
 	m_nVaccinesCapacity = nVaccinesCapacity;
@@ -202,8 +219,6 @@ int CBlueLightObject::ResetVaccines ( unsigned int n_step_number)
     /* toggle light */
     m_nActivation = 1;
 	m_nVaccines = m_nVaccinesCapacity;
-	printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-	std:cout << m_nOutStepNumber;
 	
 	// Reset Out Step Number
 	m_nOutStepNumber = n_step_number;
