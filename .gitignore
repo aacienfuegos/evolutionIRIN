@@ -9,7 +9,6 @@
 .deps
 Makefile
 Makefile.in
-arguments.cpp
 compile
 config.*
 configure
