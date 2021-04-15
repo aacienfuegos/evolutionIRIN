@@ -12,8 +12,9 @@ compile
 config.*
 !renders/drawstuff/config.h
 configure
-decomp
+depcomp
 install-sh
 irsim
+missing
 outputFiles/*
 stamp-h1
