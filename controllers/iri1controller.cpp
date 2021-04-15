@@ -12,7 +12,7 @@
 #include <string>
 #include <math.h>
 #include <ctime>
-#include <cstdlib> 
+#include <cstdlib>
 #include <cstdio>
 
 /******************** Simulator ****************/
@@ -44,7 +44,7 @@ const int mapGridX          = 20;
 const int mapGridY          = 20;
 double    mapLengthX        = 3.0;
 double    mapLengthY        = 3.0;
-int       robotStartGridX   = 10; 
+int       robotStartGridX   = 10;
 int       robotStartGridY   = 10;
 double    almacen_actual = 0.0;
 
@@ -63,7 +63,7 @@ const   int dir=8; // number of possible directions to go at any position
 static int dx[dir]={1, 1, 0, -1, -1, -1, 0, 1};
 static int dy[dir]={0, 1, 1, 1, 0, -1, -1, -1};
 
-#define ERROR_DIRECTION 0.05 
+#define ERROR_DIRECTION 0.05
 #define ERROR_POSITION  0.02
 /******************************************************************************/
 /******************************************************************************/
@@ -110,7 +110,7 @@ class node
   int priority;  // smaller: higher priority
 
   public:
-  node(int xp, int yp, int d, int p) 
+  node(int xp, int yp, int d, int p)
   {xPos=xp; yPos=yp; level=d; priority=p;}
 
   int getxPos() const {return xPos;}
@@ -134,7 +134,7 @@ class node
   {
     static int xd, yd, d;
     xd=xDest-xPos;
-    yd=yDest-yPos;         
+    yd=yDest-yPos;
 
     // Euclidian Distance
     d=static_cast<int>(sqrt(xd*xd+yd*yd));
@@ -165,7 +165,7 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 
 {
 	m_nWriteToFile = n_write_to_file;
-	
+
 	/* Set epuck */
 	m_pcEpuck = pc_epuck;
 	/* Set Wheels */
@@ -189,8 +189,8 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 	/* Set encoder Sensor */
 	m_seEncoder = (CEncoderSensor*) m_pcEpuck->GetSensor (SENSOR_ENCODER);
   m_seEncoder->InitEncoderSensor(m_pcEpuck);
-  
-	
+
+
 	/* Initialize Motor Variables */
 	m_fLeftSpeed  = 0.0;
 	m_fRightSpeed = 0.0;
@@ -206,7 +206,7 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 	{
 		m_fActivationTable[i] = new double[3];
 	}
-  
+
   /* Odometry */
   m_nState              = 0;
   m_nPathPlanningStops  = 0;
@@ -271,8 +271,8 @@ void CIri1Controller::SimulationStep(unsigned n_step_number, double f_time, doub
 
 	/* Set Speed to wheels */
   m_acWheels->SetSpeed(m_fLeftSpeed, m_fRightSpeed);
-  
-	if (m_nWriteToFile ) 
+
+	if (m_nWriteToFile )
 	{
 	/* INIT: WRITE TO FILES */
 	/* Write robot position and orientation */
@@ -286,7 +286,7 @@ void CIri1Controller::SimulationStep(unsigned n_step_number, double f_time, doub
 		fclose(fileWheels);
 		/* END WRITE TO FILES */
 	}
-  
+
 
 }
 
@@ -304,7 +304,7 @@ void CIri1Controller::ExecuteBehaviors ( void )
 	fBattToForageInhibitor = 1.0;
 	fGoalToForageInhibitor = 1.0;
 	/* Set Leds to BLACK */
-  if(m_pcEpuck->GetJob() == 1){
+  if(m_pcEpuck->GetJob() <= 0){
 	  m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLACK);
   } else {
 	  m_pcEpuck->SetAllColoredLeds(	LED_COLOR_WHITE);
@@ -317,7 +317,7 @@ void CIri1Controller::ExecuteBehaviors ( void )
   ComputeActualCell ( GO_GOAL_PRIORITY );
   PathPlanning      ( GO_GOAL_PRIORITY );
   GoGoal            ( GO_GOAL_PRIORITY );
-	
+
   Forage            ( FORAGE_PRIORITY );
 	Navigate          ( NAVIGATE_PRIORITY );
 }
@@ -327,7 +327,7 @@ void CIri1Controller::ExecuteBehaviors ( void )
 
 void CIri1Controller::Coordinator ( void )
 {
-  /* Create counter for behaviors */ 
+  /* Create counter for behaviors */
 	int       nBehavior;
   /* Create angle of movement */
   double    fAngle = 0.0;
@@ -356,7 +356,7 @@ void CIri1Controller::Coordinator ( void )
   /* printf("fAngle: %2f\n", fAngle); */
   /* printf("\n"); */
   /* DEBUG */
-  
+
   if (fAngle > 0)
   {
     m_fLeftSpeed = SPEED*(1 - fmin(fAngle, ERROR_DIRECTION)/ERROR_DIRECTION);
@@ -368,7 +368,7 @@ void CIri1Controller::Coordinator ( void )
     m_fRightSpeed = SPEED*(1 - fmin(-fAngle, ERROR_DIRECTION)/ERROR_DIRECTION);
   }
 
-  if (m_nWriteToFile ) 
+  if (m_nWriteToFile )
 	{
 		/* INIT: WRITE TO FILES */
 		/* Write coordinator ouputs */
@@ -403,7 +403,7 @@ void CIri1Controller::ObstacleAvoidance ( unsigned int un_priority )
 		if ( prox[i] > fMaxProx )
 			fMaxProx = prox[i];
 	}
-	
+
 	/* Calc pointing angle */
 	float fRepelent = atan2(vRepelent.y, vRepelent.x);
 	/* Create repelent angle */
@@ -423,8 +423,8 @@ void CIri1Controller::ObstacleAvoidance ( unsigned int un_priority )
     /* Mark Behavior as active */
     m_fActivationTable[un_priority][2] = 1.0;
 	}
-	
-	if (m_nWriteToFile ) 
+
+	if (m_nWriteToFile )
 	{
 		/* INIT WRITE TO FILE */
 		/* Write level of competence ouputs */
@@ -434,7 +434,7 @@ void CIri1Controller::ObstacleAvoidance ( unsigned int un_priority )
 		fclose(fileOutput);
 		/* END WRITE TO FILE */
 	}
-	
+
 }
 
 /******************************************************************************/
@@ -447,7 +447,7 @@ void CIri1Controller::Navigate ( unsigned int un_priority )
 	m_fActivationTable[un_priority][1] = 0.1; // ro
 	m_fActivationTable[un_priority][2] = 1.0; // flag
 
-	if (m_nWriteToFile ) 
+	if (m_nWriteToFile )
 	{
 		/* INIT: WRITE TO FILES */
 		/* Write level of competence ouputs */
@@ -458,7 +458,7 @@ void CIri1Controller::Navigate ( unsigned int un_priority )
 	}
 
 }
-		
+
 /******************************************************************************/
 /******************************************************************************/
 
@@ -487,10 +487,10 @@ void CIri1Controller::GoLoad ( unsigned int un_priority )
 		if ( light[i] > fMaxLight )
 			fMaxLight = light[i];
 	}
-	
+
 	/* Calc pointing angle */
 	float fRepelent = atan2(vRepelent.y, vRepelent.x);
-	
+
   /* Normalize angle */
 	while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
 	while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
@@ -505,13 +505,13 @@ void CIri1Controller::GoLoad ( unsigned int un_priority )
 		fBattToForageInhibitor = 0.0;
 		/* Set Leds to RED */
 		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_RED);
-		
+
     /* Mark behavior as active */
     m_fActivationTable[un_priority][2] = 1.0;
-	}	
+	}
 
-	
-	if (m_nWriteToFile ) 
+
+	if (m_nWriteToFile )
 	{
 		/* INIT WRITE TO FILE */
 		FILE* fileOutput = fopen("outputFiles/batteryOutput", "a");
@@ -529,10 +529,10 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 {
 	/* Leer Sensores de Suelo Memory */
 	double* groundMemory = m_seGroundMemory->GetSensorReading(m_pcEpuck);
-	
+
 	/* Leer Sensores de Luz */
 	double* light = m_seLight->GetSensorReading(m_pcEpuck);
-	
+
 	double fMaxLight = 0.0;
 	const double* lightDirections = m_seLight->GetSensorDirections();
 
@@ -550,21 +550,21 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 		if ( light[i] > fMaxLight )
 			fMaxLight = light[i];
 	}
-	
+
 	/* Calc pointing angle */
 	float fRepelent = atan2(vRepelent.y, vRepelent.x);
 	/* Create repelent angle */
 	fRepelent -= M_PI;
-	
+
   /* Normalize angle */
 	while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
 	while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
 
   m_fActivationTable[un_priority][0] = fRepelent;
   m_fActivationTable[un_priority][1] = 1 - fMaxLight;
-  
+
   //std::cout << m_nForageStatus;
-  
+
   /* If with a virtual puck */
   if ( groundMemory[0] * fBattToForageInhibitor * fGoalToForageInhibitor * m_nForageStatusA == 1.0)
 	{
@@ -572,9 +572,9 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLUE);
     /* Mark Behavior as active */
     m_fActivationTable[un_priority][2] = 1.0;
-		
+
 	}
-	if (m_nWriteToFile ) 
+	if (m_nWriteToFile )
 	{
 		/* INIT WRITE TO FILE */
 		FILE* fileOutput = fopen("outputFiles/forageOutput", "a");
@@ -600,13 +600,21 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
   double* blue_light = m_seBlueLight->GetSensorReading(m_pcEpuck);
   	/* Leer Sensores de Luz Roja */
   double* red_light = m_seRedLight->GetSensorReading(m_pcEpuck);
-  
-  double almacen_actual = 0.0;
+
+  double almacen_actual_blue = 0.0;
+  double almacen_actual_red = 0.0;
 
   for ( int i = 0 ; i < sizeof(blue_light); i ++ ){
-    if(blue_light[i] != 0 || red_light[i] != 0) almacen_actual = 1.0;
+    if( blue_light[i] != 0 ){
+		almacen_actual_blue = 1.0;
+		break;
+	}
+    if( red_light[i] != 0 ){
+		almacen_actual_red = 1.0;
+		break;
+	}
   }
-  
+
   CalcPositionAndOrientation (encoder);
 
   /* DEBUG */
@@ -616,27 +624,27 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
   /* Calc increment of position, correlating grid and metrics */
   double fXmov = mapLengthX/((double)mapGridX);
   double fYmov = mapLengthY/((double)mapGridY);
-  
+
   /* Compute X grid */
   double tmp = m_vPosition.x;
   tmp += robotStartGridX * fXmov + 0.5*fXmov;
   m_nRobotActualGridX = (int) (tmp/fXmov);
-  
+
   /* Compute Y grid */
   tmp = -m_vPosition.y;
   tmp += robotStartGridY * fYmov + 0.5*fYmov;
   m_nRobotActualGridY = (int) (tmp/fYmov);
-  
-  
+
+
   /* DEBUG */
   /* printf("GRID: X: %d, %d\n", m_nRobotActualGridX, m_nRobotActualGridY); */
   /* DEBUG */
-  
+
   /* Update no-obstacles on map */
   if (  onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] != NEST &&
         onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] != PREY )
     onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NO_OBSTACLE;
- 
+
   /* If looking for nest and arrived to nest */
   if ( m_nForageStatusA == 1 && groundMemory[0] == 0 )
   {
@@ -657,9 +665,9 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     /* PrintMap(&onlineMap[0][0]); */
     /* DEBUG */
   }//end looking for nest
-  
+
   /* If looking for prey and prey graspped */
-  else if ( m_nForageStatusA == 0 && ground[0] == 0.5 && almacen_actual == 1)
+  else if ( m_nForageStatusA == 0 && ground[0] == 0.5 && (almacen_actual_blue + almacen_actual_red) == 1)
   {
     /* Update forage Status */
     m_nForageStatusA = 1;
@@ -674,11 +682,11 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     /* Update nest grid */
     m_nPreyGridX = m_nRobotActualGridX;
     m_nPreyGridY = m_nRobotActualGridY;
-    
+
     /* Pick Up vaccine */
-		m_seBlueLight->PickUpNearestLight(m_pcEpuck->GetJob());
-    
-    
+	if (almacen_actual_blue == 1.0) m_seBlueLight->PickUpNearestLight(m_pcEpuck->GetJob());
+	else if (almacen_actual_red == 1.0) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
+
     /* DEBUG */
     /* PrintMap(&onlineMap[0][0]); */
     /* DEBUG */
@@ -699,7 +707,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
   {
     m_nPathPlanningStops=0;
     m_fActivationTable[un_priority][2] = 1;
-    
+
     /* Obtain start and end desired position */
     int xA, yA, xB, yB;
     if ( m_nForageStatusA == 1)
@@ -727,7 +735,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
         if (onlineMap[x][y] != NO_OBSTACLE && onlineMap[x][y] != NEST && onlineMap[x][y] != PREY)
           map[x][y] = OBSTACLE;
 
-    
+
     /* Obtain optimal path */
     string route=pathFind(xA, yA, xB, yB);
     /* DEBUG */
@@ -740,7 +748,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
     for (int i = 1 ; i < route.length() ; i++)
       if (route[i-1] != route[i])
         m_nPathPlanningStops++;
-   
+
     /* Add last movement */
     m_nPathPlanningStops++;
     /* DEBUG */
@@ -748,7 +756,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
     /* DEBUG */
 
     /* Define vector of desired positions. One for each changing direction */
-    m_vPositionsPlanning = new dVector2[m_nPathPlanningStops]; 
+    m_vPositionsPlanning = new dVector2[m_nPathPlanningStops];
 
     /* Calc increment of position, correlating grid and metrics */
     double fXmov = mapLengthX/mapGridX;
@@ -770,7 +778,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
       /* For every position in route, increment countr */
       counter++;
       /* If a direction changed */
-      if ((route[i-1] != route[i])) 
+      if ((route[i-1] != route[i]))
       {
         /* Obtain the direction char */
         char c;
@@ -829,7 +837,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
     /*   for ( int i = 0 ; i < route.length() ; i++ ) */
     /*   { */
     /*     c = route.at(i); */
-    /*     j = atoi(&c); */ 
+    /*     j = atoi(&c); */
     /*     x = x+dx[j]; */
     /*     y = y+dy[j]; */
     /*     map[x][y] = PATH; */
@@ -865,7 +873,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
      * Notice we are only working with initial orientation = 0.0 */
     for (int i = 0 ; i < m_nPathPlanningStops ; i++)
     {
-      /* Traslation */ 
+      /* Traslation */
       m_vPositionsPlanning[i].x -= ( (robotStartGridX * fXmov) - (mapGridX * fXmov)/2 );
       m_vPositionsPlanning[i].y += ( (robotStartGridY * fXmov) - (mapGridY * fYmov)/2);
       /* Rotation */
@@ -908,7 +916,7 @@ void CIri1Controller::GoGoal ( unsigned int un_priority )
     /* printf("PlanningX: %2f, Actual: %2f\n", m_vPositionsPlanning[m_nState].x, m_vPosition.x ); */
     /* printf("PlanningY: %2f, Actual: %2f\n", m_vPositionsPlanning[m_nState].y, m_vPosition.y ); */
     /* DEBUG */
-    
+
     double fX = (m_vPositionsPlanning[m_nState].x - m_vPosition.x);
     double fY = (m_vPositionsPlanning[m_nState].y - m_vPosition.y);
     double fGoalDirection = 0;
@@ -936,10 +944,10 @@ void CIri1Controller::GoGoal ( unsigned int un_priority )
 
 void CIri1Controller::CalcPositionAndOrientation (double *f_encoder)
 {
-  /* DEBUG */ 
+  /* DEBUG */
   //printf("Encoder: %2f, %2f\n", f_encoder[0], f_encoder[1]);
-  /* DEBUG */ 
-  
+  /* DEBUG */
+
   /* Remake kinematic equations */
   double fIncU = (f_encoder[0]+ f_encoder[1] )/ 2;
   double fIncTetha = (f_encoder[1] - f_encoder[0])/ CEpuck::WHEELS_DISTANCE;
@@ -951,7 +959,7 @@ void CIri1Controller::CalcPositionAndOrientation (double *f_encoder)
   /* Update new Position */
   m_vPosition.x += fIncU * cos(m_fOrientation + fIncTetha/2);
   m_vPosition.y += fIncU * sin(m_fOrientation + fIncTetha/2);
-  
+
   /* Update new Orientation */
   m_fOrientation += fIncTetha;
 
@@ -965,7 +973,7 @@ void CIri1Controller::CalcPositionAndOrientation (double *f_encoder)
 
 // A-star algorithm.
 // The route returned is a string of direction digits.
-string CIri1Controller::pathFind( const int & xStart, const int & yStart, 
+string CIri1Controller::pathFind( const int & xStart, const int & yStart,
     const int & xFinish, const int & yFinish )
 {
   static priority_queue<node> pq[2]; // list of open (not-yet-tried) nodes
@@ -997,7 +1005,7 @@ string CIri1Controller::pathFind( const int & xStart, const int & yStart,
   {
     // get the current node w/ the highest priority
     // from the list of open nodes
-    n0=new node( pq[pqi].top().getxPos(), pq[pqi].top().getyPos(), 
+    n0=new node( pq[pqi].top().getxPos(), pq[pqi].top().getyPos(),
         pq[pqi].top().getLevel(), pq[pqi].top().getPriority());
 
     x=n0->getxPos(); y=n0->getyPos();
@@ -1009,7 +1017,7 @@ string CIri1Controller::pathFind( const int & xStart, const int & yStart,
 
     // quit searching when the goal state is reached
     //if((*n0).estimate(xFinish, yFinish) == 0)
-    if(x==xFinish && y==yFinish) 
+    if(x==xFinish && y==yFinish)
     {
       // generate the path from finish to start
       // by following the directions
@@ -1026,7 +1034,7 @@ string CIri1Controller::pathFind( const int & xStart, const int & yStart,
       // garbage collection
       delete n0;
       // empty the leftover nodes
-      while(!pq[pqi].empty()) pq[pqi].pop();           
+      while(!pq[pqi].empty()) pq[pqi].pop();
       return path;
     }
 
@@ -1035,11 +1043,11 @@ string CIri1Controller::pathFind( const int & xStart, const int & yStart,
     {
       xdx=x+dx[i]; ydy=y+dy[i];
 
-      if(!(xdx<0 || xdx>n-1 || ydy<0 || ydy>m-1 || map[xdx][ydy]==1 
+      if(!(xdx<0 || xdx>n-1 || ydy<0 || ydy>m-1 || map[xdx][ydy]==1
             || closed_nodes_map[xdx][ydy]==1))
       {
         // generate a child node
-        m0=new node( xdx, ydy, n0->getLevel(), 
+        m0=new node( xdx, ydy, n0->getLevel(),
             n0->getPriority());
         m0->nextLevel(i);
         m0->updatePriority(xFinish, yFinish);
@@ -1063,20 +1071,20 @@ string CIri1Controller::pathFind( const int & xStart, const int & yStart,
           // by emptying one pq to the other one
           // except the node to be replaced will be ignored
           // and the new node will be pushed in instead
-          while(!(pq[pqi].top().getxPos()==xdx && 
+          while(!(pq[pqi].top().getxPos()==xdx &&
                 pq[pqi].top().getyPos()==ydy))
-          {                
+          {
             pq[1-pqi].push(pq[pqi].top());
-            pq[pqi].pop();       
+            pq[pqi].pop();
           }
           pq[pqi].pop(); // remove the wanted node
 
           // empty the larger size pq to the smaller one
           if(pq[pqi].size()>pq[1-pqi].size()) pqi=1-pqi;
           while(!pq[pqi].empty())
-          {                
+          {
             pq[1-pqi].push(pq[pqi].top());
-            pq[pqi].pop();       
+            pq[pqi].pop();
           }
           pqi=1-pqi;
           pq[pqi].push(*m0); // add the better node instead
@@ -1094,7 +1102,7 @@ string CIri1Controller::pathFind( const int & xStart, const int & yStart,
 
 void CIri1Controller::PrintMap ( int *print_map )
 {
-      
+
   /* DEBUG */
   for ( int x = 0 ; x < n ; x++ )
   {

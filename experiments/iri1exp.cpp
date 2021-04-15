@@ -236,7 +236,6 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 			m_nVaccinesCapacity[i] = getInt('=', pfile);
 			/* Get number of Vaccines Threshold */
 			m_nVaccinesThreshold[i] = getInt('=', pfile);
-			std::cout << m_nVaccinesThreshold[i];
 		}
 
 		/* Red Lights */
@@ -369,7 +368,15 @@ CArena *CIri1Exp::CreateArena()
 		sprintf(pchTemp, "RedLightObject%d", i);
 		CRedLightObject *pcRedLightObject = new CRedLightObject(pchTemp);
 		pcRedLightObject->SetCenter(m_pcvRedLightObjects[i]);
-		/* pcRedLightObject->Switch(0); */
+		
+		/* DEBUG */
+		dVector2 pos;
+		pcRedLightObject->GetCenter(&pos);
+		printf("Position X: "); std::cout << pos.x ; printf("\n");
+		printf("Position Y: "); std::cout << pos.y ; printf("\n");
+		/* DEBUG */
+		
+		pcRedLightObject->Switch(0);
 		pcRedLightObject->SetVaccines(m_nVaccinesThreshold[i]);
 		pcRedLightObject->SetVaccinesThreshold(m_nVaccinesThreshold[i]);
 		pcArena->AddRedLightObject(pcRedLightObject);

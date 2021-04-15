@@ -5,7 +5,7 @@
 /******************************************************************************/
 
 CArena::CArena(const char* pch_name) : CGeometry(pch_name, 0, 0, 0, 0),
-                                       m_fSizeX(0), m_fSizeY(0), 
+                                       m_fSizeX(0), m_fSizeY(0),
                                        m_unResX(0), m_unResY(0)
 {
   m_pColorFunction = NULL;
@@ -14,7 +14,7 @@ CArena::CArena(const char* pch_name) : CGeometry(pch_name, 0, 0, 0, 0),
 /******************************************************************************/
 /******************************************************************************/
 
-CArena::~CArena() 
+CArena::~CArena()
 {
 //     if( m_pcGroundTexture )
 //         delete m_pcGroundTexture;
@@ -23,7 +23,7 @@ CArena::~CArena()
 /******************************************************************************/
 /******************************************************************************/
 
-void CArena::GetSize(double* f_size_x, double* f_size_y) 
+void CArena::GetSize(double* f_size_x, double* f_size_y)
 {
     (*f_size_x) = m_fSizeX;
     (*f_size_y) = m_fSizeY;
@@ -45,7 +45,7 @@ void CArena::SetSize(double f_size_x, double f_size_y)
 {
     m_fSizeX = f_size_x;
     m_fSizeY = f_size_y;
-    
+
 }
 
 /******************************************************************************/
@@ -87,14 +87,14 @@ bool CArena::IsUnderShelter(float f_X,float f_Y){
 dVector2 CArena::GetClosestShelterPosition(float f_X, float f_Y)
 {
     vector<CCircleCollisionObject*>::iterator it = m_vecShelters.begin();
-    
+
     double minDistance = 99999.0;
     dVector2 closestShelterPos;
 
     while (it != m_vecShelters.end())
     {
 	dVector2 shelterPos = (*it)->GetPosition();
-	double d = sqrt( (shelterPos.x - f_X) * (shelterPos.x - f_X) + (shelterPos.y - f_Y) * (shelterPos.y - f_Y) ); 
+	double d = sqrt( (shelterPos.x - f_X) * (shelterPos.x - f_X) + (shelterPos.y - f_Y) * (shelterPos.y - f_Y) );
 	if (d < minDistance)
 	{
 	    minDistance = d;
@@ -122,7 +122,7 @@ vector<CCircleCollisionObject*> CArena::GetShelters(){
 /******************************************************************************/
 
 //vector<CColoredWall*> CArena::GetColoredWalls(){
-	//return m_vecWalls;	
+	//return m_vecWalls;
 //}
 
 ///******************************************************************************/
@@ -182,7 +182,7 @@ double* CArena::GetGroundAreaColor(dVector2 Pos, double f_orientation){
 	fcolor[0]=1.0; //LEFT
 	fcolor[1]=1.0; //CENTER
 	fcolor[2]=1.0; //RIGHT
-	
+
 	while(it!=m_vecGroundArea.end()){
 		dVector2 groundAreaPos;
 		(*it)->GetCenter(&groundAreaPos);
@@ -280,8 +280,8 @@ double CArena::GetGroundColor(dVector2 v_position)
 
 /******************************************************************************/
 /******************************************************************************/
-void CArena::SimulationStep(unsigned int n_step_number, 
-                            double f_time, 
+void CArena::SimulationStep(unsigned int n_step_number,
+                            double f_time,
                             double f_step_interval)
 {
 
@@ -294,14 +294,14 @@ void CArena::SimulationStep(unsigned int n_step_number,
 			(*it)->Switch((*it)->GetTiming(n_step_number));
 			it++;
 		}
-		
+
 		/* Get blue light timing */
 		//vector<CBlueLightObject*>::iterator blue_it=m_vecBlueLightObject.begin();
 		//while(blue_it!=m_vecBlueLightObject.end()){
 			//(*blue_it)->Switch((*blue_it)->GetTiming(n_step_number));
 			//blue_it++;
 		//}
-		
+
 		/* Get blue light timing */
 		vector<CRedLightObject*>::iterator red_it=m_vecRedLightObject.begin();
 		while(red_it!=m_vecRedLightObject.end()){
@@ -425,8 +425,8 @@ bool CArena::GetNearestLightInSector ( dVector2 Pos, double f_orientation, doubl
 						f_orientation += 2*M_PI;
 					else
 						fRobotLightAngle += 2*M_PI;
-				}	
-				
+				}
+
 				fRelAngle = fRobotLightAngle - f_orientation;
 
 				if (fabs(fRelAngle) <= f_aperture )
@@ -488,8 +488,8 @@ bool CArena::GetNearestBlueLightInSector ( dVector2 Pos, double f_orientation, d
 						f_orientation += 2*M_PI;
 					else
 						fRobotLightAngle += 2*M_PI;
-				}	
-				
+				}
+
 				fRelAngle = fRobotLightAngle - f_orientation;
 
 				if (fabs(fRelAngle) <= f_aperture )
@@ -551,8 +551,8 @@ bool CArena::GetNearestRedLightInSector ( dVector2 Pos, double f_orientation, do
 						f_orientation += 2*M_PI;
 					else
 						fRobotLightAngle += 2*M_PI;
-				}	
-				
+				}
+
 				fRelAngle = fRobotLightAngle - f_orientation;
 
 				if (fabs(fRelAngle) <= f_aperture )
@@ -580,7 +580,7 @@ bool CArena::GetNearestRedLightInSector ( dVector2 Pos, double f_orientation, do
 void CArena::SwitchNearestLight (dVector2 Pos, int n_value)
 {
 	vector<CLightObject*>::iterator it=m_vecLightObject.begin();
-	
+
 	CLightObject* light;
 	double nearestDistance = 10000;
 	bool lightFound = false;
@@ -643,7 +643,7 @@ bool CArena::BlueLightDistance ( dVector2 Pos, double range, double *distance){
 bool CArena::GetNearestBlueLight ( dVector2 Pos, double range, dVector2 *light_position, double *nearestDistance)
 {
 	vector<CBlueLightObject*>::iterator it=m_vecBlueLightObject.begin();
-	
+
 	*nearestDistance = range;
 	/* get all the Light Objects */
 	while(it!=m_vecBlueLightObject.end()){
@@ -677,7 +677,7 @@ bool CArena::GetNearestBlueLight ( dVector2 Pos, double range, dVector2 *light_p
 void CArena::SwitchNearestBlueLight (dVector2 Pos, int n_value)
 {
 	vector<CBlueLightObject*>::iterator it=m_vecBlueLightObject.begin();
-	
+
 	CBlueLightObject* light;
 	double nearestDistance = 10000;
 	bool lightFound = false;
@@ -740,7 +740,7 @@ bool CArena::RedLightDistance ( dVector2 Pos, double range, double *distance){
 bool CArena::GetNearestRedLight ( dVector2 Pos, double range, dVector2 *light_position, double *nearestDistance)
 {
 	vector<CRedLightObject*>::iterator it=m_vecRedLightObject.begin();
-	
+
 	*nearestDistance = range;
 	/* get all the Light Objects */
 	while(it!=m_vecRedLightObject.end()){
@@ -774,7 +774,7 @@ bool CArena::GetNearestRedLight ( dVector2 Pos, double range, dVector2 *light_po
 void CArena::SwitchNearestRedLight (dVector2 Pos, int n_value)
 {
 	vector<CRedLightObject*>::iterator it=m_vecRedLightObject.begin();
-	
+
 	CRedLightObject* light;
 	double nearestDistance = 10000;
 	bool lightFound = false;
@@ -809,7 +809,7 @@ void CArena::PickUpNearestWarehouseBlue (dVector2 Pos, int nNewVaccines)
 	vector<CBlueLightObject*>::iterator it=m_vecBlueLightObject.begin();
 	CBlueLightObject* light;
 	dVector2 lightObjectPos;
-	
+
 	/* get all the Light Objects */
 	while(it!=m_vecBlueLightObject.end()){
 		/* Get the Light Object Position */
@@ -828,16 +828,20 @@ void CArena::PickUpNearestWarehouseBlue (dVector2 Pos, int nNewVaccines)
 	int nVaccines = light->GetVaccines();
 	int nVaccinesThreshold = light->GetVaccinesThreshold();
 	int nVaccinesCapacity = light->GetVaccinesCapacity();
+	light->GetCenter(&lightObjectPos);
 
 	if ( lightFound == true )
 		nVaccines += nNewVaccines;
 		light->SetVaccines(nVaccines);
 
 		/* DEBUG */
-		printf("-------BLUE---------\n");
-		printf("Vaccines: "); std::cout << nVaccines; printf("\n");
-		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
-		printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n");
+		/* printf("-------BLUE---------\n"); */
+		/* printf("Vaccines: "); std::cout << nVaccines; printf("\n"); */
+		/* printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n"); */
+		/* printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n"); */
+		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
+		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
+		printf("Distance: "); std::cout << nearestDistance; printf("\n");
 		/* DEBUG */
 
 		if (nVaccines > nVaccinesCapacity) {
@@ -866,7 +870,7 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 
 	vector<CRedLightObject*>::iterator it=m_vecRedLightObject.begin();
 	CRedLightObject* light;
-	
+
 	/* get all the Light Objects */
 	while(it!=m_vecRedLightObject.end()){
 		/* Get the Light Object Position */
@@ -883,6 +887,8 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 	}
 	int nVaccines = light->GetVaccines();
 	int nVaccinesThreshold = light->GetVaccinesThreshold();
+	light->GetCenter(&lightObjectPos);
+
 	if ( lightFound )
 		nVaccines += nNewVaccines;
 		light->SetVaccines(nVaccines);
@@ -891,6 +897,8 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 		printf("-------RED---------\n");
 		printf("Vaccines: "); std::cout << nVaccines; printf("\n");
 		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
+		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
 		/* DEBUG */
 
 		if(nVaccines <= 0) {
@@ -901,7 +909,7 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 			nVaccines = nVaccinesThreshold;
 		} else {
 			printf("Warning: We are running out of vaccines!!\n");
-			light->Switch(true);
+			light->Switch(1);
 		}
 		light->SetVaccines(nVaccines);
 }

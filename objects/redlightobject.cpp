@@ -17,7 +17,7 @@ CRedLightObject::CRedLightObject(const char* pch_name) : CGeometry(pch_name)
 	m_nOutStepNumber=0;
 	RECOVERY_TIME = 1000;
 
-	m_nActivation = false;
+	m_nActivation = true;
 }
 
 /******************************************************************************/
@@ -124,7 +124,7 @@ int CRedLightObject::GetStatus ( void )
 
 void CRedLightObject::Reset ( void )
 {
-  m_nActivation = false;
+  m_nActivation = true;
 }
 
 /******************************************************************************/
