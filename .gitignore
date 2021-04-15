@@ -5,3 +5,13 @@ irsim
 *.log
 *.cache
 *~
+*.m4
+arguments.cpp
+compile
+.deps
+Makefile*
+config.*
+configure
+decomp
+install-sh
+stamp-h1
