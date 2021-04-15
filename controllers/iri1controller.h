@@ -52,8 +52,7 @@ private:
     int       m_nRobotActualGridX;
     int       m_nRobotActualGridY;
 
-    int       m_nForageStatusA;
-    int       m_nForageStatusB;
+    int       m_nForageStatus;
 
     
     int       m_nNestFound;
@@ -65,6 +64,9 @@ private:
     int       m_nPreyGridY;
 
     int       m_nPathPlanningDone;
+
+    double    almacen_actual_blue;
+    double    almacen_actual_red;
 		/* Functions */
 
 		void ExecuteBehaviors   ( void );

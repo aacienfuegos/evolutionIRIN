@@ -46,7 +46,7 @@ double    mapLengthX        = 3.0;
 double    mapLengthY        = 3.0;
 int       robotStartGridX   = 10;
 int       robotStartGridY   = 10;
-double    almacen_actual = 0.0;
+// MIRAR DONDE INICIAMOS CADA UNO DE LOS ROBOTS PARA PONERLO AQUI
 
 const   int n=mapGridX; // horizontal size of the map
 const   int m=mapGridY; // vertical size size of the map
@@ -124,7 +124,7 @@ class node
   }
 
   // give better priority to going strait instead of diagonally
-  void nextLevel(const int & i) // i: direction
+void nextLevel(const int & i) // i: direction
   {
     level+=(dir==8?(i%2==0?10:14):10);
   }
@@ -228,8 +228,7 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
   /* DEBUG */
 
   /* Initialize status of foraging */
-  m_nForageStatusA = 0;
-  m_nForageStatusB = 0;
+  m_nForageStatus = 0;
 
   /* Initialize Nest/Prey variables */
   m_nNestGridX  = 0;
@@ -241,6 +240,9 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 
   /* Initialize PAthPlanning Flag*/
   m_nPathPlanningDone = 0;
+
+  almacen_actual_blue = 0.0;
+  almacen_actual_red = 0.0;
 }
 
 /******************************************************************************/
@@ -551,6 +553,7 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 			fMaxLight = light[i];
 	}
 
+  if(m_pcEpuck->GetJob() <= 0){
 	/* Calc pointing angle */
 	float fRepelent = atan2(vRepelent.y, vRepelent.x);
 	/* Create repelent angle */
@@ -563,13 +566,31 @@ void CIri1Controller::Forage ( unsigned int un_priority )
   m_fActivationTable[un_priority][0] = fRepelent;
   m_fActivationTable[un_priority][1] = 1 - fMaxLight;
 
-  //std::cout << m_nForageStatus;
+  //std::cout << m_norageStatus;
 
   /* If with a virtual puck */
-  if ( groundMemory[0] * fBattToForageInhibitor * fGoalToForageInhibitor * m_nForageStatusA == 1.0)
+  } else {
+    	/* Calc pointing angle */
+	float fRepelent = atan2(vRepelent.y, vRepelent.x);
+	/* Create repelent angle */
+	//fRepelent -= M_PI;
+
+  /* Normalize angle */
+	while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
+	while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
+
+  m_fActivationTable[un_priority][0] = fRepelent;
+  m_fActivationTable[un_priority][1] = fMaxLight;
+  }
+
+  if ( groundMemory[0] * fBattToForageInhibitor * fGoalToForageInhibitor * m_nForageStatus == 1.0)
 	{
 		/* Set Leds to BLUE */
-		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLUE);
+    if(m_pcEpuck->GetJob() <= 0){
+		  m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLUE);
+    } else {
+   		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_YELLOW);
+    }
     /* Mark Behavior as active */
     m_fActivationTable[un_priority][2] = 1.0;
 
@@ -601,8 +622,8 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
   	/* Leer Sensores de Luz Roja */
   double* red_light = m_seRedLight->GetSensorReading(m_pcEpuck);
 
-  double almacen_actual_blue = 0.0;
-  double almacen_actual_red = 0.0;
+  almacen_actual_blue = 0.0;
+  almacen_actual_red = 0.0;
 
   for ( int i = 0 ; i < sizeof(blue_light); i ++ ){
     if( blue_light[i] != 0 ){
@@ -645,52 +666,106 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
         onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] != PREY )
     onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NO_OBSTACLE;
 
-  /* If looking for nest and arrived to nest */
-  if ( m_nForageStatusA == 1 && groundMemory[0] == 0 )
-  {
-    /* update forage status */
-    m_nForageStatusA = 0;
-    /* Asumme Path Planning is done */
-    m_nPathPlanningDone = 0;
-    /* Restart PathPlanning state */
-    m_nState = 0;
-    /* Mark nest on map */
-    onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NEST;
-    /* Flag that nest was found */
-    m_nNestFound = 1;
-    /* Update nest grid */
-    m_nNestGridX = m_nRobotActualGridX;
-    m_nNestGridY = m_nRobotActualGridY;
-    /* DEBUG */
-    /* PrintMap(&onlineMap[0][0]); */
-    /* DEBUG */
-  }//end looking for nest
+  
+  if(m_pcEpuck->GetJob() <= 0){
+    /* If looking for nest and arrived to nest */
+    if ( m_nForageStatus == 1 && ground[0] == 0 )
+    {
+      printf("forage 0\n");
+      /* update forage status */
+      m_nForageStatus = 0;
+      /* Asumme Path Planning is done */
+      m_nPathPlanningDone = 0;
+      /* Restart PathPlanning state */
+      m_nState = 0;
+      /* Mark nest on map */
+      onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NEST;
+      /* Flag that nest was found */
+      m_nNestFound = 1;
+      /* Update nest grid */
+      m_nNestGridX = m_nRobotActualGridX;
+      m_nNestGridY = m_nRobotActualGridY;
+      /* DEBUG */
+      /* PrintMap(&onlineMap[0][0]); */
+      /* DEBUG */
+    }//end looking for nest
 
-  /* If looking for prey and prey graspped */
-  else if ( m_nForageStatusA == 0 && ground[0] == 0.5 && (almacen_actual_blue + almacen_actual_red) == 1)
-  {
-    /* Update forage Status */
-    m_nForageStatusA = 1;
-    /* Asumme Path Planning is done */
-    m_nPathPlanningDone = 0;
-    /* Restart PathPlanning state */
-    m_nState = 0;
-    /* Mark prey on map */
-    onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = PREY;
-    /* Flag that nest was found */
-    m_nPreyFound = 1;
-    /* Update nest grid */
-    m_nPreyGridX = m_nRobotActualGridX;
-    m_nPreyGridY = m_nRobotActualGridY;
+    /* If looking for prey and prey graspped */
+    else if ( m_nForageStatus == 0 && ground[0] == 0.5 && (almacen_actual_blue + almacen_actual_red) == 1)
+    {
+      printf("forage 1\n");
+      /* Update forage Status */
+      m_nForageStatus = 1;
+      /* Asumme Path Planning is done */
+      m_nPathPlanningDone = 0;
+      /* Restart PathPlanning state */
+      m_nState = 0;
+      /* Mark prey on map */
+      onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = PREY;
+      /* Flag that nest was found */
+      m_nPreyFound = 1;
+      /* Update nest grid */
+      m_nPreyGridX = m_nRobotActualGridX;
+      m_nPreyGridY = m_nRobotActualGridY;
 
-    /* Pick Up vaccine */
-	if (almacen_actual_blue == 1.0) m_seBlueLight->PickUpNearestLight(m_pcEpuck->GetJob());
-	else if (almacen_actual_red == 1.0) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
+      /* Pick Up vaccine */
+      if (almacen_actual_blue == 1.0) m_seBlueLight->PickUpNearestLight(m_pcEpuck->GetJob());
+      else if (almacen_actual_red == 1.0) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
 
-    /* DEBUG */
-    /* PrintMap(&onlineMap[0][0]); */
-    /* DEBUG */
+      /* DEBUG */
+      /* PrintMap(&onlineMap[0][0]); */
+      /* DEBUG */
+      }
+  } 
+  if(m_pcEpuck->GetJob() > 0) {
+    /* If looking for nest and arrived to nest */
+
+    if ( (m_nForageStatus == 1) && (ground[0] >= 0.19 && ground[0] < 0.21))
+    {
+      /* update forage status */
+      m_nForageStatus = 0;
+      /* Asumme Path Planning is done */
+      m_nPathPlanningDone = 0;
+      /* Restart PathPlanning state */
+      m_nState = 0;
+      /* Mark nest on map */
+      onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NEST;
+      /* Flag that nest was found */
+      m_nNestFound = 1;
+      /* Update nest grid */
+      m_nNestGridX = m_nRobotActualGridX;
+      m_nNestGridY = m_nRobotActualGridY;
+      /* DEBUG */
+      /* PrintMap(&onlineMap[0][0]); */
+      /* DEBUG */
+    }//end looking for nest
+
+    /* If looking for prey and prey graspped */
+    else if ( m_nForageStatus == 0 && ground[0] == 0.5 && almacen_actual_blue == 0.0)
+    {
+      /* Update forage Status */
+      m_nForageStatus = 1;
+      /* Asumme Path Planning is done */
+      m_nPathPlanningDone = 0;
+      /* Restart PathPlanning state */
+      m_nState = 0;
+      /* Mark prey on map */
+      onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = PREY;
+      /* Flag that nest was found */
+      m_nPreyFound = 1;
+      /* Update nest grid */
+      m_nPreyGridX = m_nRobotActualGridX;
+      m_nPreyGridY = m_nRobotActualGridY;
+
+      /* Pick Up vaccine */
+      m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
+
+      /* DEBUG */
+      /* PrintMap(&onlineMap[0][0]); */
+      /* DEBUG */
+      }    
   }
+
 }
 
 /******************************************************************************/
@@ -710,7 +785,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
 
     /* Obtain start and end desired position */
     int xA, yA, xB, yB;
-    if ( m_nForageStatusA == 1)
+    if ( m_nForageStatus == 1)
     {
       xA=m_nRobotActualGridX;
       yA=m_nRobotActualGridY;
