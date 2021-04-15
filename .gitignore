@@ -5,6 +5,7 @@
 *.m4
 *.o
 */Makefile*
+*conflicted*
 *~
 .deps
 Makefile
