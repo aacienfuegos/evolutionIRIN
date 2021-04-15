@@ -1,3 +1,4 @@
+!/Makefile.a
 *.a
 *.cache
 *.log
