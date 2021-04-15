@@ -834,29 +834,37 @@ void CArena::PickUpNearestWarehouseBlue (dVector2 Pos, int nNewVaccines)
 		nVaccines += nNewVaccines;
 		light->SetVaccines(nVaccines);
 
+		if (nVaccines > nVaccinesCapacity) {
+			light->Switch(1);
+			light->SetVaccines(nVaccinesCapacity);
+		} else if(nVaccines <= nVaccinesThreshold) {
+			light->Switch(0);
+			light->SetVaccines(nVaccinesThreshold);
 		/* DEBUG */
-		/* printf("-------BLUE---------\n"); */
-		/* printf("Vaccines: "); std::cout << nVaccines; printf("\n"); */
-		/* printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n"); */
-		/* printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n"); */
-		/* printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n"); */
-		/* printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n"); */
+		printf("-------BLUE---------\n");
+		printf("Vaccines: "); std::cout << light->GetVaccines(); printf("\n");
+		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n");
+		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
+		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
+		/* printf("Distance: "); std::cout << nearestDistance; printf("\n"); */
+		/* DEBUG */
+			PickUpNearestWarehouseRed(lightObjectPos, nVaccines - nVaccinesThreshold);
+			return;
+		} else {
+			light->Switch(1);
+			light->SetVaccines(nVaccines);
+		}
+		/* DEBUG */
+		printf("-------BLUE---------\n");
+		printf("Vaccines: "); std::cout << light->GetVaccines(); printf("\n");
+		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n");
+		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
+		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
 		/* printf("Distance: "); std::cout << nearestDistance; printf("\n"); */
 		/* DEBUG */
 
-		if (nVaccines > nVaccinesCapacity) {
-			nVaccines = nVaccinesCapacity;
-		} else if(nVaccines <= nVaccinesThreshold) {
-			light->Switch(0);
-			PickUpNearestWarehouseRed(lightObjectPos, nVaccines - nVaccinesThreshold);
-			nVaccines = nVaccinesThreshold;
-		}
-		else if (nVaccines > nVaccinesCapacity) {
-			nVaccines = nVaccinesCapacity;
-		} else {
-			light->Switch(1);
-		}
-		light->SetVaccines(nVaccines);
 }
 
 /*****************************************************************************************************/
@@ -891,25 +899,36 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 
 	if ( lightFound )
 		nVaccines += nNewVaccines;
-		light->SetVaccines(nVaccines);
-
-		/* DEBUG */
-		/* printf("-------RED---------\n"); */
-		/* printf("Vaccines: "); std::cout << nVaccines; printf("\n"); */
-		/* printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n"); */
-		/* printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n"); */
-		/* printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n"); */
-		/* DEBUG */
+		
+		/* light->SetVaccines(nVaccines); */
 
 		if(nVaccines <= 0) {
+			printf("out of storage");
 			light->Switch(0);
+			light->SetVaccines(0);
 		} else if(nVaccines > nVaccinesThreshold) {
 			light->Switch(0);
+			light->SetVaccines(nVaccinesThreshold);
+		/* DEBUG */
+		printf("-------RED---------\n");
+		printf("Vaccines: "); std::cout << light->GetVaccines(); printf("\n");
+		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
+		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
+		/* DEBUG */
 			PickUpNearestWarehouseBlue(lightObjectPos, nVaccines - nVaccinesThreshold);
-			nVaccines = nVaccinesThreshold;
+			return;
 		} else {
-			/* printf("Warning: We are running out of vaccines!!\n"); */
+			printf("Warning: We are running out of vaccines!!\n");
 			light->Switch(1);
+			light->SetVaccines(nVaccines);
 		}
-		light->SetVaccines(nVaccines);
+		/* DEBUG */
+		printf("-------RED---------\n");
+		printf("Vaccines: "); std::cout << light->GetVaccines(); printf("\n");
+		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
+		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
+		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
+		/* DEBUG */
+
 }
