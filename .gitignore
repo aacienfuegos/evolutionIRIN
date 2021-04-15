@@ -10,6 +10,7 @@ Makefile
 Makefile.in
 compile
 config.*
+!renders/drawstuff/config.h
 configure
 decomp
 install-sh
