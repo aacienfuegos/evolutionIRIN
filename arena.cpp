@@ -839,9 +839,9 @@ void CArena::PickUpNearestWarehouseBlue (dVector2 Pos, int nNewVaccines)
 		/* printf("Vaccines: "); std::cout << nVaccines; printf("\n"); */
 		/* printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n"); */
 		/* printf("VaccinesCapacity: "); std::cout << nVaccinesCapacity; printf("\n"); */
-		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
-		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
-		printf("Distance: "); std::cout << nearestDistance; printf("\n");
+		/* printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n"); */
+		/* printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n"); */
+		/* printf("Distance: "); std::cout << nearestDistance; printf("\n"); */
 		/* DEBUG */
 
 		if (nVaccines > nVaccinesCapacity) {
@@ -894,11 +894,11 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 		light->SetVaccines(nVaccines);
 
 		/* DEBUG */
-		printf("-------RED---------\n");
-		printf("Vaccines: "); std::cout << nVaccines; printf("\n");
-		printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n");
-		printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n");
-		printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n");
+		/* printf("-------RED---------\n"); */
+		/* printf("Vaccines: "); std::cout << nVaccines; printf("\n"); */
+		/* printf("VaccinesThreshold: "); std::cout << nVaccinesThreshold; printf("\n"); */
+		/* printf("Position X: "); std::cout << lightObjectPos.x ; printf("\n"); */
+		/* printf("Position Y: "); std::cout << lightObjectPos.y ; printf("\n"); */
 		/* DEBUG */
 
 		if(nVaccines <= 0) {
@@ -908,7 +908,7 @@ void CArena::PickUpNearestWarehouseRed (dVector2 Pos, int nNewVaccines)
 			PickUpNearestWarehouseBlue(lightObjectPos, nVaccines - nVaccinesThreshold);
 			nVaccines = nVaccinesThreshold;
 		} else {
-			printf("Warning: We are running out of vaccines!!\n");
+			/* printf("Warning: We are running out of vaccines!!\n"); */
 			light->Switch(1);
 		}
 		light->SetVaccines(nVaccines);
