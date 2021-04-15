@@ -4,9 +4,11 @@
 *.log
 *.m4
 *.o
+*/Makefile*
 *~
 .deps
-Makefile*
+Makefile
+Makefile.in
 arguments.cpp
 compile
 config.*
