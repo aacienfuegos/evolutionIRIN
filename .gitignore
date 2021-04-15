@@ -13,8 +13,11 @@ config.*
 !renders/drawstuff/config.h
 configure
 depcomp
+frame/*
+!frame/README.md
 install-sh
 irsim
 missing
 outputFiles/*
+!outputFiles/README.md
 stamp-h1
