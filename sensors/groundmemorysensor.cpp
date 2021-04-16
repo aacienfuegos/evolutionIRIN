@@ -24,21 +24,21 @@ double* CGroundMemorySensor::ComputeSensorReadings(CEpuck* pc_epuck, CSimulator*
 
 	/* Get Position of the epuck */
 	dVector2 vPosition;
-	vPosition.x = (pc_epuck->GetPosition()).x; 
+	vPosition.x = (pc_epuck->GetPosition()).x;
 	vPosition.y = (pc_epuck->GetPosition()).y;
 	double fOrientation;
 	fOrientation = (pc_epuck->GetRotation());
-	
+
 	/* Get Color of the place where the epuck is */
 	CArena* pcArena = pc_simulator->GetArena();
 	double* fSensor;
 	fSensor = pcArena->GetGroundAreaColor(vPosition,fOrientation);
 
 	//double* groundSensor = new double[NUM_GROUND_SENSOR];
-	
+
 	if ( fSensor[1] < 0.8)
 	{
-		if ( m_fStatus == 0.0 & fSensor[1] == 0.5 ) 
+		if ( m_fStatus == 0.0 & fSensor[1] == 0.5 )
 		{
 			m_fStatus = 1.0;
 		}
@@ -79,7 +79,7 @@ unsigned int CGroundMemorySensor::GetType(){
 //char* CGroundMemorySensor::getGroundAreaName ( CEpuck *p_pcEpuck){
 	///* Get Position of the epuck */
 	//dVector2 vPosition;
-	//vPosition.x = (p_pcEpuck->GetPosition()).x; 
+	//vPosition.x = (p_pcEpuck->GetPosition()).x;
 	//vPosition.y = (p_pcEpuck->GetPosition()).y;
 	//double fOrientation;
 	//fOrientation = (p_pcEpuck->GetRotation());
