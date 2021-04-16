@@ -1,4 +1,5 @@
 #include "groundmemorysensor.h"
+#define ERROR_GROUND    0.01 // Epsilon to compute floats comparassion
 
 /******************************************************************************/
 /******************************************************************************/
@@ -42,7 +43,10 @@ double* CGroundMemorySensor::ComputeSensorReadings(CEpuck* pc_epuck, CSimulator*
 			m_fStatus = 1.0;
 		}
 
-		else if ( m_fStatus == 1.0  & fSensor[1] == 0.0 )
+		else if ( m_fStatus == 1.0  & fSensor[1] == 0.0  & pc_epuck->GetJob() <= 0 )
+		{
+			m_fStatus = 0.0;
+		} else if ( m_fStatus == 1.0  & fabs(fSensor[1]-0.2) <= ERROR_GROUND  & pc_epuck->GetJob()>0 )
 		{
 			m_fStatus = 0.0;
 		}
