@@ -65,6 +65,7 @@ static int dy[dir]={0, 1, 1, 1, 0, -1, -1, -1};
 
 #define ERROR_DIRECTION 0.05
 #define ERROR_POSITION  0.02
+#define ERROR_GROUND    0.01
 /******************************************************************************/
 /******************************************************************************/
 
@@ -224,7 +225,7 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
       onlineMap[x][y] = OBSTACLE;
 
   /* DEBUG */
-  /* PrintMap(&onlineMap[0][0]); */
+  PrintMap(&onlineMap[0][0]);
   /* DEBUG */
 
   /* Initialize status of foraging */
@@ -274,6 +275,10 @@ void CIri1Controller::SimulationStep(unsigned n_step_number, double f_time, doub
 	/* Set Speed to wheels */
   m_acWheels->SetSpeed(m_fLeftSpeed, m_fRightSpeed);
 
+  /* DEBUG */
+	PrintMap(&onlineMap[0][0]);
+  /* DEBUG */
+
 	if (m_nWriteToFile )
 	{
 	/* INIT: WRITE TO FILES */
@@ -322,6 +327,13 @@ void CIri1Controller::ExecuteBehaviors ( void )
 
   Forage            ( FORAGE_PRIORITY );
 	Navigate          ( NAVIGATE_PRIORITY );
+	for ( int i = 0 ; i < BEHAVIORS ; i++ )
+	{
+		std::cout << m_fActivationTable[i][1] ;
+		printf("\n");
+	}
+
+  /* printf("Forage: ");std::cout << m_nForageStatus; printf("\n"); */
 }
 
 /******************************************************************************/
@@ -345,7 +357,7 @@ void CIri1Controller::Coordinator ( void )
 		if ( m_fActivationTable[nBehavior][2] == 1.0 )
 		{
       /* DEBUG */
-      /* printf("Behavior %d: %2f\n", nBehavior, m_fActivationTable[nBehavior][0]); */
+      printf("Behavior %d: %2f\n", nBehavior, m_fActivationTable[nBehavior][0]);
       /* DEBUG */
       vAngle.x += m_fActivationTable[nBehavior][1] * cos(m_fActivationTable[nBehavior][0]);
       vAngle.y += m_fActivationTable[nBehavior][1] * sin(m_fActivationTable[nBehavior][0]);
@@ -355,8 +367,8 @@ void CIri1Controller::Coordinator ( void )
   /* Calc angle of movement */
   fAngle = atan2(vAngle.y, vAngle.x);
   /* DEBUG */
-  /* printf("fAngle: %2f\n", fAngle); */
-  /* printf("\n"); */
+  printf("fAngle: %2f\n", fAngle);
+  printf("\n");
   /* DEBUG */
 
   if (fAngle > 0)
@@ -553,37 +565,36 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 			fMaxLight = light[i];
 	}
 
-  if(m_pcEpuck->GetJob() <= 0){
-	/* Calc pointing angle */
-	float fRepelent = atan2(vRepelent.y, vRepelent.x);
-	/* Create repelent angle */
-	fRepelent -= M_PI;
 
-  /* Normalize angle */
-	while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
-	while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
+    /* Calc pointing angle */
+    float fRepelent = atan2(vRepelent.y, vRepelent.x);
+    /* Create repelent angle */
+    //fRepelent -= M_PI;
 
-  m_fActivationTable[un_priority][0] = fRepelent;
-  m_fActivationTable[un_priority][1] = 1 - fMaxLight;
-
-  //std::cout << m_norageStatus;
+    /* Normalize angle */
+    while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
+    while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
 
   /* If with a virtual puck */
+  if(m_pcEpuck->GetJob() <= 0){
+    /* Create repelent angle */
+    fRepelent -= M_PI;
+    /* Normalize angle */
+    while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
+    while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
+
+    m_fActivationTable[un_priority][0] = fRepelent;
+    m_fActivationTable[un_priority][1] = 1 - fMaxLight;
+
   } else {
-    	/* Calc pointing angle */
-	float fRepelent = atan2(vRepelent.y, vRepelent.x);
-	/* Create repelent angle */
-	//fRepelent -= M_PI;
-
-  /* Normalize angle */
-	while ( fRepelent > M_PI ) fRepelent -= 2 * M_PI;
-	while ( fRepelent < -M_PI ) fRepelent += 2 * M_PI;
-
-  m_fActivationTable[un_priority][0] = fRepelent;
-  m_fActivationTable[un_priority][1] = fMaxLight;
+    m_fActivationTable[un_priority][0] = fRepelent;
+    m_fActivationTable[un_priority][1] = fMaxLight;
   }
 
-  if ( groundMemory[0] * fBattToForageInhibitor * fGoalToForageInhibitor * m_nForageStatus == 1.0)
+  /* std::cout << groundMemory[0]; */
+  /* std::cout << fGoalToForageInhibitor; */
+  /* std::cout << m_nForageStatus; */
+  if ( groundMemory[0] * fBattToForageInhibitor * m_nForageStatus == 1.0)
 	{
 		/* Set Leds to BLUE */
     if(m_pcEpuck->GetJob() <= 0){
@@ -592,7 +603,7 @@ void CIri1Controller::Forage ( unsigned int un_priority )
    		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_YELLOW);
     }
     /* Mark Behavior as active */
-    m_fActivationTable[un_priority][2] = 1.0;
+	if(fGoalToForageInhibitor==1.0) m_fActivationTable[un_priority][2] = 1.0;
 
 	}
 	if (m_nWriteToFile )
@@ -639,7 +650,7 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
   CalcPositionAndOrientation (encoder);
 
   /* DEBUG */
-  //printf("POS: X: %2f, %2f\r", m_vPosition.x, m_vPosition.y );
+  printf("POS: X: %2f, %2f\n", m_vPosition.x, m_vPosition.y );
   /* DEBUG */
 
   /* Calc increment of position, correlating grid and metrics */
@@ -658,7 +669,7 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
 
 
   /* DEBUG */
-  /* printf("GRID: X: %d, %d\n", m_nRobotActualGridX, m_nRobotActualGridY); */
+  printf("GRID: X: %d, %d\n", m_nRobotActualGridX, m_nRobotActualGridY);
   /* DEBUG */
 
   /* Update no-obstacles on map */
@@ -666,12 +677,11 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
         onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] != PREY )
     onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NO_OBSTACLE;
 
-  
+
   if(m_pcEpuck->GetJob() <= 0){
     /* If looking for nest and arrived to nest */
-    if ( m_nForageStatus == 1 && ground[0] == 0 )
+    if ( m_nForageStatus == 1 && groundMemory[0] == 0 )
     {
-      printf("forage 0\n");
       /* update forage status */
       m_nForageStatus = 0;
       /* Asumme Path Planning is done */
@@ -686,14 +696,13 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
       m_nNestGridX = m_nRobotActualGridX;
       m_nNestGridY = m_nRobotActualGridY;
       /* DEBUG */
-      /* PrintMap(&onlineMap[0][0]); */
+      PrintMap(&onlineMap[0][0]);
       /* DEBUG */
     }//end looking for nest
 
     /* If looking for prey and prey graspped */
     else if ( m_nForageStatus == 0 && ground[0] == 0.5 && (almacen_actual_blue + almacen_actual_red) == 1)
     {
-      printf("forage 1\n");
       /* Update forage Status */
       m_nForageStatus = 1;
       /* Asumme Path Planning is done */
@@ -713,14 +722,15 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
       else if (almacen_actual_red == 1.0) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
 
       /* DEBUG */
-      /* PrintMap(&onlineMap[0][0]); */
+      PrintMap(&onlineMap[0][0]);
       /* DEBUG */
       }
-  } 
+  }
   if(m_pcEpuck->GetJob() > 0) {
     /* If looking for nest and arrived to nest */
 
-    if ( (m_nForageStatus == 1) && (ground[0] >= 0.19 && ground[0] < 0.21))
+    /* if ( (m_nForageStatus == 1) && fabs(ground[0]-0.2)<ERROR_GROUND) */
+    if ( (m_nForageStatus == 1) && groundMemory[0]==0)
     {
       /* update forage status */
       m_nForageStatus = 0;
@@ -763,7 +773,7 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
       /* DEBUG */
       /* PrintMap(&onlineMap[0][0]); */
       /* DEBUG */
-      }    
+      }
   }
 
 }
@@ -801,7 +811,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
     }
 
     /* DEBUG */
-    /* printf("START: %d, %d - END: %d, %d\n", xA, yA, xB, yB); */
+    printf("START: %d, %d - END: %d, %d\n", xA, yA, xB, yB);
     /* DEBUG */
 
     /* Obtain Map */
@@ -814,9 +824,9 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
     /* Obtain optimal path */
     string route=pathFind(xA, yA, xB, yB);
     /* DEBUG */
-    /* if(route=="") cout<<"An empty route generated!"<<endl; */
-    /* cout << "Route:" << route << endl; */
-    /* printf("route Length: %d\n", route.length()); */
+    if(route=="") cout<<"An empty route generated!"<<endl;
+    cout << "Route:" << route << endl;
+    printf("route Length: %d\n", route.length());
     /* DEBUG */
 
     /* Obtain number of changing directions */
@@ -827,7 +837,7 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
     /* Add last movement */
     m_nPathPlanningStops++;
     /* DEBUG */
-    /* printf("STOPS: %d\n", m_nPathPlanningStops); */
+    printf("STOPS: %d\n", m_nPathPlanningStops);
     /* DEBUG */
 
     /* Define vector of desired positions. One for each changing direction */
@@ -900,29 +910,33 @@ void CIri1Controller::PathPlanning ( unsigned int un_priority )
         counter = 0;
       }
 
+      if(actualPos.x == m_vPositionsPlanning[m_nPathPlanningStops-1].x && actualPos.y == m_vPositionsPlanning[m_nPathPlanningStops-1].y){
+        /* printf("Arrived to destination\n") ; */
+      }
+
     }
 
     /* DEBUG */
-    /* if(route.length()>0) */
-    /* { */
-    /*   int j; char c; */
-    /*   int x=xA; */
-    /*   int y=yA; */
-    /*   map[x][y]=START; */
-    /*   for ( int i = 0 ; i < route.length() ; i++ ) */
-    /*   { */
-    /*     c = route.at(i); */
-    /*     j = atoi(&c); */
-    /*     x = x+dx[j]; */
-    /*     y = y+dy[j]; */
-    /*     map[x][y] = PATH; */
-    /*   } */
-    /*   map[x][y]=END; */
+    if(route.length()>0)
+    {
+      int j; char c;
+      int x=xA;
+      int y=yA;
+      map[x][y]=START;
+      for ( int i = 0 ; i < route.length() ; i++ )
+      {
+        c = route.at(i);
+        j = atoi(&c);
+        x = x+dx[j];
+        y = y+dy[j];
+        map[x][y] = PATH;
+      }
+      map[x][y]=END;
 
-    /*   PrintMap(&onlineMap[0][0]); */
-    /*   printf("\n\n"); */
-    /*   PrintMap(&map[0][0]); */
-    /* } */
+      PrintMap(&onlineMap[0][0]);
+      printf("\n\n");
+      PrintMap(&map[0][0]);
+    }
     /* END DEBUG */
 
     /* DEBUG */
@@ -988,8 +1002,8 @@ void CIri1Controller::GoGoal ( unsigned int un_priority )
     }
 
     /* DEBUG */
-    /* printf("PlanningX: %2f, Actual: %2f\n", m_vPositionsPlanning[m_nState].x, m_vPosition.x ); */
-    /* printf("PlanningY: %2f, Actual: %2f\n", m_vPositionsPlanning[m_nState].y, m_vPosition.y ); */
+    printf("PlanningX: %2f, Actual: %2f\n", m_vPositionsPlanning[m_nState].x, m_vPosition.x );
+    printf("PlanningY: %2f, Actual: %2f\n", m_vPositionsPlanning[m_nState].y, m_vPosition.y );
     /* DEBUG */
 
     double fX = (m_vPositionsPlanning[m_nState].x - m_vPosition.x);
@@ -1020,7 +1034,7 @@ void CIri1Controller::GoGoal ( unsigned int un_priority )
 void CIri1Controller::CalcPositionAndOrientation (double *f_encoder)
 {
   /* DEBUG */
-  //printf("Encoder: %2f, %2f\n", f_encoder[0], f_encoder[1]);
+  printf("Encoder: %2f, %2f\n", f_encoder[0], f_encoder[1]);
   /* DEBUG */
 
   /* Remake kinematic equations */
