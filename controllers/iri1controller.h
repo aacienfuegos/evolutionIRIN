@@ -42,6 +42,16 @@ private:
 		double 		m_fTime;
     double    fBattToForageInhibitor;
     double    fGoalToForageInhibitor;
+
+    /* map */
+    int  n; // horizontal size of the map
+    int  m; // vertical size size of the map
+
+    int** map;
+    int** onlineMap;
+    int** closed_nodes_map; // map of closed (tried-out) nodes
+    int** open_nodes_map; // map of open (not-yet-tried) nodes
+    int** dir_map; // map of directions
    
     /* Odometry */
     float     m_fOrientation; 
@@ -53,7 +63,7 @@ private:
     int       m_nRobotActualGridY;
 
     int       m_nForageStatus;
-
+    int       m_nRecogido;
     
     int       m_nNestFound;
     int       m_nNestGridX;

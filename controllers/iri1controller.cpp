@@ -48,13 +48,13 @@ int       robotStartGridX   = 10;
 int       robotStartGridY   = 10;
 // MIRAR DONDE INICIAMOS CADA UNO DE LOS ROBOTS PARA PONERLO AQUI
 
-const   int n=mapGridX; // horizontal size of the map
-const   int m=mapGridY; // vertical size size of the map
-static  int map[n][m];
-static  int onlineMap[n][m];
-static  int closed_nodes_map[n][m]; // map of closed (tried-out) nodes
-static  int open_nodes_map[n][m]; // map of open (not-yet-tried) nodes
-static  int dir_map[n][m]; // map of directions
+/* const   int n=mapGridX; // horizontal size of the map */
+/* const   int m=mapGridY; // vertical size size of the map */
+/* static  int map[n][m]; */
+/* static  int onlineMap[n][m]; */
+/* static  int closed_nodes_map[n][m]; // map of closed (tried-out) nodes */
+/* static  int open_nodes_map[n][m]; // map of open (not-yet-tried) nodes */
+/* static  int dir_map[n][m]; // map of directions */
 const   int dir=8; // number of possible directions to go at any position
 //if dir==4
 //static int dx[dir]={1, 0, -1, 0};
@@ -207,6 +207,23 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 	{
 		m_fActivationTable[i] = new double[3];
 	}
+  
+  /* Inicialize maps */
+  n = mapGridX;
+  m = mapGridY;
+  map = new int*[n];
+  onlineMap = new int*[n];
+  closed_nodes_map = new int*[n]; // map of closed (tried-out) nodes
+  open_nodes_map = new int*[n]; // map of open (not-yet-tried) nodes
+  dir_map = new int*[n]; // map of directions
+  
+  for (int i = 0; i < n; i++){
+    map[i] =  new int[m];   
+    onlineMap[i] =  new int[m];   
+    closed_nodes_map[i] =  new int[m];   
+    open_nodes_map[i] =  new int[m];   
+    dir_map[i] =  new int[m];   
+  }
 
   /* Odometry */
   m_nState              = 0;
@@ -219,6 +236,8 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
   m_nRobotActualGridX = robotStartGridX;
   m_nRobotActualGridY = robotStartGridY;
 
+  std::cout << m;
+  std::cout << n;
   /* Init onlineMap */
   for ( int y = 0 ; y < m ; y++ )
     for ( int x = 0 ; x < n ; x++ )
@@ -230,6 +249,7 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 
   /* Initialize status of foraging */
   m_nForageStatus = 0;
+  m_nRecogido = 0;
 
   /* Initialize Nest/Prey variables */
   m_nNestGridX  = 0;
@@ -550,6 +570,8 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 	double fMaxLight = 0.0;
 	const double* lightDirections = m_seLight->GetSensorDirections();
 
+  double forage_aux = m_nForageStatus;
+
   /* We call vRepelent to go similar to Obstacle Avoidance, although it is an aproaching vector */
 	dVector2 vRepelent;
 	vRepelent.x = 0.0;
@@ -589,23 +611,28 @@ void CIri1Controller::Forage ( unsigned int un_priority )
   } else {
     m_fActivationTable[un_priority][0] = fRepelent;
     m_fActivationTable[un_priority][1] = fMaxLight;
+    
+    // Switch Forage Status
+    //if(forage_aux == 0.0) forage_aux = 1.0;
+    //else if(forage_aux == 1.0) forage_aux = 0.0;
   }
 
-  /* std::cout << groundMemory[0]; */
-  /* std::cout << fGoalToForageInhibitor; */
-  /* std::cout << m_nForageStatus; */
-  if ( groundMemory[0] * fBattToForageInhibitor * m_nForageStatus == 1.0)
+  if (fBattToForageInhibitor == 1.0)
 	{
-		/* Set Leds to BLUE */
-    if(m_pcEpuck->GetJob() <= 0){
-		  m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLUE);
+      
+      if(groundMemory[0] * m_nForageStatus == 1.0){
+      /* Set Leds to BLUE */
+      if(m_pcEpuck->GetJob() <= 0){
+        m_pcEpuck->SetAllColoredLeds(	LED_COLOR_BLUE);
+      }
+        /* Mark Behavior as active */
+      if(fGoalToForageInhibitor==1.0) {
+          m_fActivationTable[un_priority][2] = 1.0;
+      }
     } else {
-   		m_pcEpuck->SetAllColoredLeds(	LED_COLOR_YELLOW);
+        if(m_nRecogido == 1) m_pcEpuck->SetAllColoredLeds(LED_COLOR_YELLOW);
     }
-    /* Mark Behavior as active */
-	if(fGoalToForageInhibitor==1.0) m_fActivationTable[un_priority][2] = 1.0;
-
-	}
+  }
 	if (m_nWriteToFile )
 	{
 		/* INIT WRITE TO FILE */
@@ -734,6 +761,7 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     {
       /* update forage status */
       m_nForageStatus = 0;
+      m_nRecogido=1;
       /* Asumme Path Planning is done */
       m_nPathPlanningDone = 0;
       /* Restart PathPlanning state */
@@ -768,8 +796,10 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
       m_nPreyGridY = m_nRobotActualGridY;
 
       /* Pick Up vaccine */
+      if(m_nRecogido == 1){
       m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
-
+      }
+      m_nRecogido = 0;
       /* DEBUG */
       /* PrintMap(&onlineMap[0][0]); */
       /* DEBUG */
