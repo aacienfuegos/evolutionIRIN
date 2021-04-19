@@ -48,13 +48,15 @@ int       robotStartGridX   = 10;
 int       robotStartGridY   = 10;
 // MIRAR DONDE INICIAMOS CADA UNO DE LOS ROBOTS PARA PONERLO AQUI
 
-/* const   int n=mapGridX; // horizontal size of the map */
-/* const   int m=mapGridY; // vertical size size of the map */
-/* static  int map[n][m]; */
-/* static  int onlineMap[n][m]; */
-/* static  int closed_nodes_map[n][m]; // map of closed (tried-out) nodes */
-/* static  int open_nodes_map[n][m]; // map of open (not-yet-tried) nodes */
-/* static  int dir_map[n][m]; // map of directions */
+const   int n=mapGridX; // horizontal size of the map
+const   int m=mapGridY; // vertical size size of the map
+
+int map[n][m];
+int onlineMap[n][m];
+int closed_nodes_map[n][m]; // map of closed (tried-out) nodes
+int open_nodes_map[n][m]; // map of open (not-yet-tried) nodes
+int dir_map[n][m]; // map of directions
+
 const   int dir=8; // number of possible directions to go at any position
 //if dir==4
 //static int dx[dir]={1, 0, -1, 0};
@@ -207,23 +209,21 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 	{
 		m_fActivationTable[i] = new double[3];
 	}
-  
-  /* Inicialize maps */
-  n = mapGridX;
-  m = mapGridY;
-  map = new int*[n];
-  onlineMap = new int*[n];
-  closed_nodes_map = new int*[n]; // map of closed (tried-out) nodes
-  open_nodes_map = new int*[n]; // map of open (not-yet-tried) nodes
-  dir_map = new int*[n]; // map of directions
-  
-  for (int i = 0; i < n; i++){
-    map[i] =  new int[m];   
-    onlineMap[i] =  new int[m];   
-    closed_nodes_map[i] =  new int[m];   
-    open_nodes_map[i] =  new int[m];   
-    dir_map[i] =  new int[m];   
-  }
+
+  /* /1* Inicialize maps *1/ */
+  /* map = new int*[n]; */
+  /* onlineMap = new int*[n]; */
+  /* closed_nodes_map = new int*[n]; // map of closed (tried-out) nodes */
+  /* open_nodes_map = new int*[n]; // map of open (not-yet-tried) nodes */
+  /* dir_map = new int*[n]; // map of directions */
+
+  /* for (int i = 0; i < n; i++){ */
+  /*   map[i] =  new int[m]; */
+  /*   onlineMap[i] =  new int[m]; */
+  /*   closed_nodes_map[i] =  new int[m]; */
+  /*   open_nodes_map[i] =  new int[m]; */
+  /*   dir_map[i] =  new int[m]; */
+  /* } */
 
   /* Odometry */
   m_nState              = 0;
@@ -236,15 +236,16 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
   m_nRobotActualGridX = robotStartGridX;
   m_nRobotActualGridY = robotStartGridY;
 
-  std::cout << m;
-  std::cout << n;
   /* Init onlineMap */
-  for ( int y = 0 ; y < m ; y++ )
-    for ( int x = 0 ; x < n ; x++ )
+  for ( int y = 0 ; y < m ; y++ ){
+    for ( int x = 0 ; x < n ; x++ ){
       onlineMap[x][y] = OBSTACLE;
+	}
+  }
 
   /* DEBUG */
-  PrintMap(&onlineMap[0][0]);
+  /* PrintMap(&onlineMap[0][0]); */
+  /* printf("\n"); */
   /* DEBUG */
 
   /* Initialize status of foraging */
@@ -611,7 +612,7 @@ void CIri1Controller::Forage ( unsigned int un_priority )
   } else {
     m_fActivationTable[un_priority][0] = fRepelent;
     m_fActivationTable[un_priority][1] = fMaxLight;
-    
+
     // Switch Forage Status
     //if(forage_aux == 0.0) forage_aux = 1.0;
     //else if(forage_aux == 1.0) forage_aux = 0.0;
@@ -619,7 +620,7 @@ void CIri1Controller::Forage ( unsigned int un_priority )
 
   if (fBattToForageInhibitor == 1.0)
 	{
-      
+
       if(groundMemory[0] * m_nForageStatus == 1.0){
       /* Set Leds to BLUE */
       if(m_pcEpuck->GetJob() <= 0){

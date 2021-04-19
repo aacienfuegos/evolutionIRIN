@@ -21,7 +21,7 @@ public:
 private:
 		/* ROBOT */
     CEpuck* m_pcEpuck;
-   
+
 	 	/* SENSORS */
 		CWheelsActuator* m_acWheels;
     CEpuckProximitySensor* m_seProx;
@@ -31,9 +31,9 @@ private:
 		CContactSensor* m_seContact;
 		CGroundSensor* m_seGround;
 		CGroundMemorySensor* m_seGroundMemory;
-		CBatterySensor* m_seBattery;   
-		CEncoderSensor* m_seEncoder;  
-    
+		CBatterySensor* m_seBattery;
+		CEncoderSensor* m_seEncoder;
+
 		/* Global Variables */
 		double 		m_fLeftSpeed;
 		double 		m_fRightSpeed;
@@ -44,17 +44,15 @@ private:
     double    fGoalToForageInhibitor;
 
     /* map */
-    int  n; // horizontal size of the map
-    int  m; // vertical size size of the map
+    /* int** map; */
+    /* int** onlineMap; */
+    /* int** closed_nodes_map; // map of closed (tried-out) nodes */
+    /* int** open_nodes_map; // map of open (not-yet-tried) nodes */
+    /* int** dir_map; // map of directions */
 
-    int** map;
-    int** onlineMap;
-    int** closed_nodes_map; // map of closed (tried-out) nodes
-    int** open_nodes_map; // map of open (not-yet-tried) nodes
-    int** dir_map; // map of directions
-   
+
     /* Odometry */
-    float     m_fOrientation; 
+    float     m_fOrientation;
     dVector2  m_vPosition;
     int       m_nState;
     dVector2  *m_vPositionsPlanning;
@@ -64,11 +62,11 @@ private:
 
     int       m_nForageStatus;
     int       m_nRecogido;
-    
+
     int       m_nNestFound;
     int       m_nNestGridX;
     int       m_nNestGridY;
-    
+
     int       m_nPreyFound;
     int       m_nPreyGridX;
     int       m_nPreyGridY;
@@ -84,7 +82,7 @@ private:
 
     void CalcPositionAndOrientation ( double *f_encoder );
     string  pathFind                ( const int &xStart, const int &yStart, const int &xFinish, const int &yFinish );
-  
+
     void PrintMap ( int *print_map  );
     /* Behaviors */
 		void ObstacleAvoidance  ( unsigned int un_priority );
@@ -98,3 +96,4 @@ private:
 };
 
 #endif
+

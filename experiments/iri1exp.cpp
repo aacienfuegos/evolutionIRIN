@@ -277,7 +277,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 		/* Get Red Light Range */
 		m_fRedLightSensorRange = getDouble('=', pfile);
-		
+
 		m_fBatterySensorRange = new double[m_nRobotsNumber];
 		m_fBatteryChargeCoef = new double[m_nRobotsNumber];
 		m_fBatteryDischargeCoef = new double[m_nRobotsNumber];
@@ -310,6 +310,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 
 		/* Get Encoder Sensor Error */
 		m_fEncoderSensorError = getDouble('=', pfile);
+		printf("Ecoder error: %f\n", m_fEncoderSensorError);
 	}
 }
 
@@ -368,14 +369,14 @@ CArena *CIri1Exp::CreateArena()
 		sprintf(pchTemp, "RedLightObject%d", i);
 		CRedLightObject *pcRedLightObject = new CRedLightObject(pchTemp);
 		pcRedLightObject->SetCenter(m_pcvRedLightObjects[i]);
-		
+
 		/* DEBUG */
 		dVector2 pos;
 		pcRedLightObject->GetCenter(&pos);
 		printf("Position X: "); std::cout << pos.x ; printf("\n");
 		printf("Position Y: "); std::cout << pos.y ; printf("\n");
 		/* DEBUG */
-		
+
 		pcRedLightObject->Switch(0);
 		pcRedLightObject->SetVaccines(m_nVaccinesThreshold[i]);
 		pcRedLightObject->SetVaccinesThreshold(m_nVaccinesThreshold[i]);

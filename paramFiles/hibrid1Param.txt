@@ -2,19 +2,19 @@
 %%%%%%%%%%%%%%%% EXTRA %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-NUMBER OF ROBOTS								= 2
+NUMBER OF ROBOTS								= 1
 ROBOT 1: X POSITION (meters)		= 0.075
 ROBOT 1: Y POSITION (meters)		= -0.075
-ROBOT 1: ORIENTATION (radians) 	= 0.0
+ROBOT 1: ORIENTATION (radians) 		= 0.0
 ROBOT 1: JOB (-X takes, X gives) 	= -1
 ROBOT 2: X POSITION (meters)		* 0.075
 ROBOT 2: Y POSITION (meters)		* 0.075
 ROBOT 2: ORIENTATION (radians) 	* 0.0
 ROBOT 2: JOB (-X takes, X gives) 	* -1
-ROBOT 3: X POSITION (meters)		= -0.075
-ROBOT 3: Y POSITION (meters)		= -0.075
-ROBOT 3: ORIENTATION (radians) 	    = 0.0
-ROBOT 3: JOB (-X takes, X gives) 	= 1
+ROBOT 3: X POSITION (meters)		* -0.075
+ROBOT 3: Y POSITION (meters)		* -0.075
+ROBOT 3: ORIENTATION (radians) 	    * 0.0
+ROBOT 3: JOB (-X takes, X gives) 	* 1
 ROBOT 4: X POSITION (meters)		* -0.075
 ROBOT 4: Y POSITION (meters)		* 0.075
 ROBOT 4: ORIENTATION (radians) 	* 0.0
@@ -101,9 +101,6 @@ RED LIGHT SENSOR RANGE (meters)			= 0.3
 ROBOT 1 BATTERY SENSOR RANGE (meters)					= 0.5
 ROBOT 1 BATTERY CHARGE COEF 									= 0.5
 ROBOT 1 BATTERY DISCHARGE COEF								= 0.0001
-ROBOT 2 BATTERY SENSOR RANGE (meters)					= 0.5
-ROBOT 2 BATTERY CHARGE COEF 									= 0.5
-ROBOT 2 BATTERY DISCHARGE COEF								= 0.0001
 
 BLUE BATTERY SENSOR RANGE (meters)		= 0.5
 BLUE BATTERY CHARGE COEF 							= 0.01
