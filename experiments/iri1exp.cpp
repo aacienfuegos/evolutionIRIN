@@ -278,6 +278,7 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 		/* Get Red Light Range */
 		m_fRedLightSensorRange = getDouble('=', pfile);
 
+		/* Get Battery load range */
 		m_fBatterySensorRange = new double[m_nRobotsNumber];
 		m_fBatteryChargeCoef = new double[m_nRobotsNumber];
 		m_fBatteryDischargeCoef = new double[m_nRobotsNumber];
@@ -287,12 +288,6 @@ CIri1Exp::CIri1Exp(const char *pch_name, const char *paramsFile) : CExperiment(p
 			m_fBatteryChargeCoef[i] = getDouble('=', pfile);
 			m_fBatteryDischargeCoef[i] = getDouble('=', pfile);
 		}
-		/* Get Battery load range */
-		//m_fBatterySensorRange = getDouble('=', pfile);
-		/* Get batttery charge coef */
-		//m_fBatteryChargeCoef = getDouble('=', pfile);
-		/* Get batttery charge coef */
-		//m_fBatteryDischargeCoef = getDouble('=', pfile);
 
 		/* Get Blue Battery load range */
 		m_fBlueBatterySensorRange = getDouble('=', pfile);
@@ -463,8 +458,6 @@ void CIri1Exp::AddSensors(CEpuck *pc_epuck)
 	double fBatteryDischargeCoef = m_fBatteryDischargeCoef[nRobotIt];
 	pcBatterySensor = new CBatterySensor("Battery Sensor", fBatterySensorRange, fBatteryChargeCoef, fBatteryDischargeCoef);
 	pc_epuck->AddSensor(pcBatterySensor);
-	//pcBatterySensor = new CBatterySensor("Battery Sensor", m_fBatterySensorRange, m_fBatteryChargeCoef, m_fBatteryDischargeCoef);
-	//pc_epuck->AddSensor(pcBatterySensor);
 
 	//Blue Battery Sensor
 	CSensor *pcBlueBatterySensor = NULL;
@@ -485,6 +478,9 @@ void CIri1Exp::AddSensors(CEpuck *pc_epuck)
 	CSensor *pcCompassSensor = NULL;
 	pcCompassSensor = new CCompassSensor("compass", (CArena *)m_pcSimulator->GetArena());
 	pc_epuck->AddSensor(pcCompassSensor);
+
+	/* Increment robot iterator */
+	nRobotIt++;
 }
 
 /******************************************************************************/
@@ -497,22 +493,6 @@ void CIri1Exp::SetController(CEpuck *pc_epuck)
 	CController *pcController = new CIri1Controller(pchTemp, pc_epuck, m_nWriteToFile);
 	pc_epuck->SetControllerType(CONTROLLER_IRI1);
 	pc_epuck->SetController(pcController);
-
-	/* if(m_nControllerType[nRobotIt] == 1){ */
-	/* 	sprintf(pchTemp, "Iri2"); */
-	/* 	CController *pcController = new CIri2Controller(pchTemp, pc_epuck, m_nWriteToFile); */
-	/* 	pc_epuck->SetControllerType(CONTROLLER_IRI2); */
-	/* 	pc_epuck->SetController(pcController); */
-	/* } else if(m_nControllerType[nRobotIt] == 0) { */
-	/* 	sprintf(pchTemp, "Iri1"); */
-	/* 	CController *pcController = new CIri1Controller(pchTemp, pc_epuck, m_nWriteToFile); */
-	/* 	pc_epuck->SetControllerType(CONTROLLER_IRI1); */
-	/* 	pc_epuck->SetController(pcController); */
-	/* } else { */
-	/* 	printf("Controller chosen does not exist"); */
-	/* 	exit(0); */
-	/* } */
-	nRobotIt++;
 }
 
 /******************************************************************************/
