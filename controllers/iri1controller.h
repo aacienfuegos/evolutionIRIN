@@ -43,14 +43,6 @@ private:
     double    fBattToForageInhibitor;
     double    fGoalToForageInhibitor;
 
-    /* map */
-    /* int** map; */
-    /* int** onlineMap; */
-    /* int** closed_nodes_map; // map of closed (tried-out) nodes */
-    /* int** open_nodes_map; // map of open (not-yet-tried) nodes */
-    /* int** dir_map; // map of directions */
-
-
     /* Odometry */
     float     m_fOrientation;
     dVector2  m_vPosition;
