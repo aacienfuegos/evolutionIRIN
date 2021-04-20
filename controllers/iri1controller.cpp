@@ -297,7 +297,7 @@ void CIri1Controller::SimulationStep(unsigned n_step_number, double f_time, doub
   m_acWheels->SetSpeed(m_fLeftSpeed, m_fRightSpeed);
 
   /* DEBUG */
-	PrintMap(&onlineMap[0][0]);
+	/* PrintMap(&onlineMap[0][0]); */
   /* DEBUG */
 
 	if (m_nWriteToFile )
@@ -348,13 +348,7 @@ void CIri1Controller::ExecuteBehaviors ( void )
 
   Forage            ( FORAGE_PRIORITY );
 	Navigate          ( NAVIGATE_PRIORITY );
-	for ( int i = 0 ; i < BEHAVIORS ; i++ )
-	{
-		std::cout << m_fActivationTable[i][1] ;
-		printf("\n");
-	}
 
-  /* printf("Forage: ");std::cout << m_nForageStatus; printf("\n"); */
 }
 
 /******************************************************************************/
@@ -660,6 +654,8 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
   double* blue_light = m_seBlueLight->GetSensorReading(m_pcEpuck);
   	/* Leer Sensores de Luz Roja */
   double* red_light = m_seRedLight->GetSensorReading(m_pcEpuck);
+  /* Leer Job */
+  double job = m_pcEpuck->GetJob();
 
   almacen_actual_blue = 0.0;
   almacen_actual_red = 0.0;
@@ -673,6 +669,17 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
 		almacen_actual_red = 1.0;
 		break;
 	}
+  }
+
+  bool detectPrey = false;
+
+  switch(job<=0){
+	  case true:
+		  detectPrey = ( (almacen_actual_blue + almacen_actual_red) == 1 );
+		  break;
+	  case false:
+		  detectPrey = ( almacen_actual_blue == 0 );
+		  break;
   }
 
   CalcPositionAndOrientation (encoder);
@@ -706,63 +713,13 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NO_OBSTACLE;
 
 
-  if(m_pcEpuck->GetJob() <= 0){
     /* If looking for nest and arrived to nest */
     if ( m_nForageStatus == 1 && groundMemory[0] == 0 )
     {
       /* update forage status */
       m_nForageStatus = 0;
-      /* Asumme Path Planning is done */
-      m_nPathPlanningDone = 0;
-      /* Restart PathPlanning state */
-      m_nState = 0;
-      /* Mark nest on map */
-      onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = NEST;
-      /* Flag that nest was found */
-      m_nNestFound = 1;
-      /* Update nest grid */
-      m_nNestGridX = m_nRobotActualGridX;
-      m_nNestGridY = m_nRobotActualGridY;
-      /* DEBUG */
-      PrintMap(&onlineMap[0][0]);
-      /* DEBUG */
-    }//end looking for nest
-
-    /* If looking for prey and prey graspped */
-    else if ( m_nForageStatus == 0 && ground[0] == 0.5 && (almacen_actual_blue + almacen_actual_red) == 1)
-    {
-      /* Update forage Status */
-      m_nForageStatus = 1;
-      /* Asumme Path Planning is done */
-      m_nPathPlanningDone = 0;
-      /* Restart PathPlanning state */
-      m_nState = 0;
-      /* Mark prey on map */
-      onlineMap[m_nRobotActualGridX][m_nRobotActualGridY] = PREY;
-      /* Flag that nest was found */
-      m_nPreyFound = 1;
-      /* Update nest grid */
-      m_nPreyGridX = m_nRobotActualGridX;
-      m_nPreyGridY = m_nRobotActualGridY;
-
-      /* Pick Up vaccine */
-      if (almacen_actual_blue == 1.0) m_seBlueLight->PickUpNearestLight(m_pcEpuck->GetJob());
-      else if (almacen_actual_red == 1.0) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
-
-      /* DEBUG */
-      PrintMap(&onlineMap[0][0]);
-      /* DEBUG */
-      }
-  }
-  if(m_pcEpuck->GetJob() > 0) {
-    /* If looking for nest and arrived to nest */
-
-    /* if ( (m_nForageStatus == 1) && fabs(ground[0]-0.2)<ERROR_GROUND) */
-    if ( (m_nForageStatus == 1) && groundMemory[0]==0)
-    {
-      /* update forage status */
-      m_nForageStatus = 0;
-      m_nRecogido=1;
+	  /* Pickup vaccine to drop */
+	  if(job>0) m_nRecogido = 1;
       /* Asumme Path Planning is done */
       m_nPathPlanningDone = 0;
       /* Restart PathPlanning state */
@@ -780,7 +737,7 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
     }//end looking for nest
 
     /* If looking for prey and prey graspped */
-    else if ( m_nForageStatus == 0 && ground[0] == 0.5 && almacen_actual_blue == 0.0)
+    else if ( m_nForageStatus == 0 && ground[0] == 0.5 && detectPrey)
     {
       /* Update forage Status */
       m_nForageStatus = 1;
@@ -797,16 +754,22 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
       m_nPreyGridY = m_nRobotActualGridY;
 
       /* Pick Up vaccine */
-      if(m_nRecogido == 1){
-      m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
-      }
-      m_nRecogido = 0;
+	  switch(job<=0){
+		  case true:
+			  if (almacen_actual_blue == 1.0) m_seBlueLight->PickUpNearestLight(m_pcEpuck->GetJob());
+			  else if (almacen_actual_red == 1.0) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
+			  break;
+		  case false:
+			  if(m_nRecogido == 1) m_seRedLight->PickUpNearestLight(m_pcEpuck->GetJob());
+			/* Drop vaccine */
+			  m_nRecogido = 0;
+			  break;
+	  }
+
       /* DEBUG */
       /* PrintMap(&onlineMap[0][0]); */
       /* DEBUG */
       }
-  }
-
 }
 
 /******************************************************************************/
