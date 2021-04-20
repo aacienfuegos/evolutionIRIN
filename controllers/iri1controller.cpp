@@ -210,21 +210,6 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 		m_fActivationTable[i] = new double[3];
 	}
 
-  /* /1* Inicialize maps *1/ */
-  /* map = new int*[n]; */
-  /* onlineMap = new int*[n]; */
-  /* closed_nodes_map = new int*[n]; // map of closed (tried-out) nodes */
-  /* open_nodes_map = new int*[n]; // map of open (not-yet-tried) nodes */
-  /* dir_map = new int*[n]; // map of directions */
-
-  /* for (int i = 0; i < n; i++){ */
-  /*   map[i] =  new int[m]; */
-  /*   onlineMap[i] =  new int[m]; */
-  /*   closed_nodes_map[i] =  new int[m]; */
-  /*   open_nodes_map[i] =  new int[m]; */
-  /*   dir_map[i] =  new int[m]; */
-  /* } */
-
   /* Odometry */
   m_nState              = 0;
   m_nPathPlanningStops  = 0;
@@ -245,7 +230,6 @@ CIri1Controller::CIri1Controller (const char* pch_name, CEpuck* pc_epuck, int n_
 
   /* DEBUG */
   /* PrintMap(&onlineMap[0][0]); */
-  /* printf("\n"); */
   /* DEBUG */
 
   /* Initialize status of foraging */
@@ -607,9 +591,6 @@ void CIri1Controller::Forage ( unsigned int un_priority )
     m_fActivationTable[un_priority][0] = fRepelent;
     m_fActivationTable[un_priority][1] = fMaxLight;
 
-    // Switch Forage Status
-    //if(forage_aux == 0.0) forage_aux = 1.0;
-    //else if(forage_aux == 1.0) forage_aux = 0.0;
   }
 
   if (fBattToForageInhibitor == 1.0)
@@ -992,6 +973,8 @@ void CIri1Controller::GoGoal ( unsigned int un_priority )
       m_nNestFound  = 0;
       m_nPreyFound  = 0;
       m_nState      = 0;
+	  /* m_nRecogido = 0;	//We might want to lose the vaccine we picked up */
+
       return;
     }
 
