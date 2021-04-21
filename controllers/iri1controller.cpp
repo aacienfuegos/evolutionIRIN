@@ -700,7 +700,8 @@ void CIri1Controller::ComputeActualCell ( unsigned int un_priority )
       /* update forage status */
       m_nForageStatus = 0;
 	  /* Pickup vaccine to drop */
-	  if(job>0 && m_nPreyFound == 1) m_nRecogido = 1;
+	  /* if(job>0 && m_nPreyFound == 1) m_nRecogido = 1; */
+	  if(job>0) m_nRecogido = 1;
       /* Asumme Path Planning is done */
       m_nPathPlanningDone = 0;
       /* Restart PathPlanning state */
