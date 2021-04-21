@@ -46,7 +46,6 @@ double    mapLengthX        = 3.0;
 double    mapLengthY        = 3.0;
 int       robotStartGridX   = 10;
 int       robotStartGridY   = 10;
-// MIRAR DONDE INICIAMOS CADA UNO DE LOS ROBOTS PARA PONERLO AQUI
 
 const   int n=mapGridX; // horizontal size of the map
 const   int m=mapGridY; // vertical size size of the map
