@@ -5,20 +5,8 @@
 NUMBER OF ROBOTS								= 1
 ROBOT 1: X POSITION (meters)		= 0.075
 ROBOT 1: Y POSITION (meters)		= -0.075
-ROBOT 1: ORIENTATION (radians) 		= 0.0
+ROBOT 1: ORIENTATION (radians) 	= 0.0
 ROBOT 1: JOB (-X takes, X gives) 	= -1
-ROBOT 2: X POSITION (meters)		* 0.075
-ROBOT 2: Y POSITION (meters)		* 0.075
-ROBOT 2: ORIENTATION (radians) 	* 0.0
-ROBOT 2: JOB (-X takes, X gives) 	* -1
-ROBOT 3: X POSITION (meters)		* -0.075
-ROBOT 3: Y POSITION (meters)		* -0.075
-ROBOT 3: ORIENTATION (radians) 	    * 0.0
-ROBOT 3: JOB (-X takes, X gives) 	* 1
-ROBOT 4: X POSITION (meters)		* -0.075
-ROBOT 4: Y POSITION (meters)		* 0.075
-ROBOT 4: ORIENTATION (radians) 	* 0.0
-ROBOT 4: JOB (-X takes, X gives) 	* 1
 WRITE TO FILE (0 No, 1 YES )		= 1
 RUN TIME												= 10000
 
@@ -32,28 +20,24 @@ LIGHT 1 Y POSITION (meters)					      = -1.5
 NUMBER OF BLUE LIGHT OBJECTS 						= 5
 BLUE LIGHT 1 X POSITION (meters) 			      = 1
 BLUE LIGHT 1 Y POSITION (meters)			      = -1
-BLUE LIGHT 1 VACCINES CAPACITY (integer)          = 4
-BLUE LIGHT 1 VACCINES THRESHOLD (integer)         = 3
+BLUE LIGHT 1 VACCINES CAPACITY (integer)          = 3
+BLUE LIGHT 1 VACCINES THRESHOLD (integer)         = 2
 BLUE LIGHT 2 X POSITION (meters) 			      = -1
 BLUE LIGHT 2 Y POSITION (meters)          	      = 1
-BLUE LIGHT 2 VACCINES CAPACITY (integer)          = 5
-BLUE LIGHT 2 VACCINES THRESHOLD (integer)         = 4
+BLUE LIGHT 2 VACCINES CAPACITY (integer)          = 2
+BLUE LIGHT 2 VACCINES THRESHOLD (integer)         = 1
 BLUE LIGHT 3 X POSITION (meters) 			      = -1
 BLUE LIGHT 3 Y POSITION (meters)                  = 0.25
 BLUE LIGHT 3 VACCINES CAPACITY (integer)          = 6
 BLUE LIGHT 3 VACCINES THRESHOLD (integer)         = 5
-BLUE LIGHT 4 X POSITION (meters) 			      * 1
-BLUE LIGHT 4 Y POSITION (meters)                  * 0.25
-BLUE LIGHT 4 VACCINES CAPACITY (integer)          * 6
-BLUE LIGHT 4 VACCINES THRESHOLD (integer)         * 5
+BLUE LIGHT 4 X POSITION (meters) 			      = 0.0
+BLUE LIGHT 4 Y POSITION (meters)                  = -1
+BLUE LIGHT 4 VACCINES CAPACITY (integer)          = 2
+BLUE LIGHT 4 VACCINES THRESHOLD (integer)         = 1
 BLUE LIGHT 5 X POSITION (meters) 			      = 0.0
-BLUE LIGHT 5 Y POSITION (meters)                  = -1
-BLUE LIGHT 5 VACCINES CAPACITY (integer)          = 6
-BLUE LIGHT 5 VACCINES THRESHOLD (integer)         = 5
-BLUE LIGHT 6 X POSITION (meters) 			      = 0.0
-BLUE LIGHT 6 Y POSITION (meters)                  = 0.3
-BLUE LIGHT 6 VACCINES CAPACITY (integer)          = 6
-BLUE LIGHT 6 VACCINES THRESHOLD (integer)         = 5
+BLUE LIGHT 5 Y POSITION (meters)                  = 0.3
+BLUE LIGHT 5 VACCINES CAPACITY (integer)          = 4
+BLUE LIGHT 5 VACCINES THRESHOLD (integer)         = 2
 NUMBER OF GROUND AREA 									= 7
 GROUND AREA 1 X POSITION	(meters)					= 1.3
 GROUND AREA 1 Y POSITION	(meters)					= 1.3
@@ -75,18 +59,14 @@ GROUND AREA 5 X POSITION	(meters)	 				= -1
 GROUND AREA 5 Y POSITION	(meters)					= 0.25
 GROUND AREA 5 RADIUS	(meters)						= 0.3
 GROUND AREA 5 COLOR (0.0 Black, 0.5 Grey)				= 0.5
-GROUND AREA 6 X POSITION	(meters)	 				* 1
-GROUND AREA 6 Y POSITION	(meters)					* 0.25
-GROUND AREA 6 RADIUS	(meters)						* 0.3
-GROUND AREA 6 COLOR (0.0 Black, 0.5 Grey)				* 0.5
+GROUND AREA 6 X POSITION	(meters)	 				= 0.0
+GROUND AREA 6 Y POSITION	(meters)					= -1
+GROUND AREA 6 RADIUS	(meters)						= 0.3
+GROUND AREA 6 COLOR (0.0 Black, 0.5 Grey)				= 0.5
 GROUND AREA 7 X POSITION	(meters)	 				= 0.0
-GROUND AREA 7 Y POSITION	(meters)					= -1
+GROUND AREA 7 Y POSITION	(meters)					= 0.3
 GROUND AREA 7 RADIUS	(meters)						= 0.3
 GROUND AREA 7 COLOR (0.0 Black, 0.5 Grey)				= 0.5
-GROUND AREA 8 X POSITION	(meters)	 				= 0.0
-GROUND AREA 8 Y POSITION	(meters)					= 0.3
-GROUND AREA 8 RADIUS	(meters)						= 0.3
-GROUND AREA 8 COLOR (0.0 Black, 0.5 Grey)				= 0.5
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
