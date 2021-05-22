@@ -1,0 +1,12 @@
+#!/bin/bash
+
+trap killgroup SIGINT
+
+killgroup(){
+  echo killing...
+  kill 0
+}
+
+./irsim -E 21 -p paramFiles/iriNeuronTemplate.txt -e &
+./autopush 2&>autopush.log &
+wait
