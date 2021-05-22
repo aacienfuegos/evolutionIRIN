@@ -37,19 +37,6 @@ public:
 
 	int GetTiming ( unsigned int n_step_number );
 
-	void SetVaccines(int nVaccines);
-	int GetVaccines(void);
-
-	void SetVaccinesThreshold(int nVaccines);
-	int GetVaccinesThreshold(void);
-
-	void SetVaccinesCapacity(int nVaccinesCapacity);
-	int GetVaccinesCapacity(void);
-
-	int ResetVaccines ( unsigned int n_step_number );
-	int GetOutStepNumber ( void );
-	void SetOutStepNumber ( unsigned int n_step_number );
-
   void Reset ( void );
 
 private:
@@ -58,12 +45,6 @@ private:
 	float m_fIntRadius;
 	float m_fExtRadius;
 	float m_fHeight;
-	
-	int m_nVaccines;
-	int m_nVaccinesThreshold;
-	int m_nVaccinesCapacity;
-	unsigned int m_nOutStepNumber;
-	unsigned int RECOVERY_TIME;
 	
 	int m_nActivation;
 };

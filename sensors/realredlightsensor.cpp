@@ -123,15 +123,3 @@ void CRealRedLightSensor::SwitchNearestLight ( int n_value )
 
 /******************************************************************************/
 /******************************************************************************/
-
-void CRealRedLightSensor::PickUpNearestLight(int nJob)
-{
-	dVector2 vPosition;
-	vPosition.x = (m_pcEpuck->GetPosition()).x;
-	vPosition.y = (m_pcEpuck->GetPosition()).y;
-
-	m_pcArena->PickUpNearestWarehouseRed(vPosition, nJob);
-}
-
-/******************************************************************************/
-/******************************************************************************/

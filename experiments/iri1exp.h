@@ -30,7 +30,6 @@ private:
 		int m_nWriteToFile;
 		dVector2* m_pcvRobotPositions;
 		double* m_fRobotOrientations;
-		int* m_nJob;
 		int m_nRunTime;
 
 		/* Environment */
@@ -39,8 +38,6 @@ private:
 		
 		int m_nBlueLightObjectNumber;
 		dVector2 *m_pcvBlueLightObjects;
-		int * m_nVaccinesCapacity;
-		int * m_nVaccinesThreshold;
 		
 		int m_nRedLightObjectNumber;
 		dVector2 *m_pcvRedLightObjects;
@@ -58,9 +55,9 @@ private:
 		float m_fBlueLightSensorRange;
 		float m_fRedLightSensorRange;
 		
-		double * m_fBatterySensorRange;
-		double * m_fBatteryChargeCoef;
-		double * m_fBatteryDischargeCoef;
+		double m_fBatterySensorRange;
+		double m_fBatteryChargeCoef;
+		double m_fBatteryDischargeCoef;
 		
 		double m_fBlueBatterySensorRange;
 		double m_fBlueBatteryChargeCoef;
@@ -71,9 +68,6 @@ private:
 		double m_fRedBatteryDischargeCoef;
 		
     double m_fEncoderSensorError;
-
-	// Auxiliary
-	int nRobotIt;
 };
 
 /******************************************************************************/

@@ -10,13 +10,7 @@ CBlueLightObject::CBlueLightObject(const char* pch_name) : CGeometry(pch_name)
 	m_fIntRadius=0.0;
 	m_fExtRadius=0.0;
 	m_fGrey=1.0;
-
-	m_nVaccinesCapacity = 1;
-	m_nVaccines = m_nVaccinesCapacity;
-	m_nVaccinesThreshold = 0;
-	m_nOutStepNumber=0;
-	RECOVERY_TIME = 1000;
-
+	
 	m_nActivation = true;
 }
 
@@ -141,89 +135,6 @@ int CBlueLightObject::GetTiming ( unsigned int n_step_number )
     ///* toggle light */
     //m_nActivation ^= 0x1;
   //}
-
-	/* default return true */
-	return m_nActivation;
-
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-void CBlueLightObject::SetVaccines(int nVaccines){
-	m_nVaccines=nVaccines;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-int CBlueLightObject::GetVaccines ( void )
-{
-	return m_nVaccines;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-void CBlueLightObject::SetVaccinesThreshold(int nVaccinesThreshold){
-	m_nVaccinesThreshold=nVaccinesThreshold;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-int CBlueLightObject::GetVaccinesThreshold ( void )
-{
-	return m_nVaccinesThreshold;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-void CBlueLightObject::SetVaccinesCapacity (int nVaccinesCapacity)
-{
-	m_nVaccinesCapacity = nVaccinesCapacity;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-int CBlueLightObject::GetVaccinesCapacity ( void )
-{
-	return m_nVaccinesCapacity;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-void CBlueLightObject::SetOutStepNumber(unsigned int n_step_number){
-	m_nOutStepNumber = n_step_number;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-int CBlueLightObject::GetOutStepNumber ( void )
-{
-	return m_nOutStepNumber;
-}
-
-/******************************************************************************/
-/******************************************************************************/
-
-int CBlueLightObject::ResetVaccines ( unsigned int n_step_number)
-{
-  if(m_nActivation) m_nOutStepNumber = n_step_number;
-  if ( (n_step_number - m_nOutStepNumber) >= RECOVERY_TIME )
-  {
-    /* toggle light */
-    m_nActivation = 1;
-	m_nVaccines = m_nVaccinesCapacity;
-	
-	// Reset Out Step Number
-	m_nOutStepNumber = n_step_number;
-
-  }
 
 	/* default return true */
 	return m_nActivation;
