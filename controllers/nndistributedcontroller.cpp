@@ -464,6 +464,7 @@ void CNNDistributedController::SimulationStep(unsigned n_step_number, double f_t
 		
 		CRedBatterySensor* m_seRedBattery = (CRedBatterySensor*) m_pcEpuck->GetSensor(SENSOR_RED_BATTERY);
 		double* redBattery = m_seRedBattery->GetSensorReading(m_pcEpuck);
+		printf("\nRed battery: %f\n", redBattery[0]);
 		if(redBattery[0] < 0.5) 
 			m_pcEpuck->SetAllColoredLeds(	LED_COLOR_RED);
 		
