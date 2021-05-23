@@ -256,10 +256,40 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 
 	double fitness = 1.0;
 
+  if (groundMemory[0] > 0.0)
+  {
+    fitness *= ( lightS0 + lightS7)/2;
+    if (m_unGreyFlag == 0)
+    {
+      m_unGreyFlag = 1;
+      m_unGreyCounter++;
+    }
+  }
+  else
+  {
+    fitness *= (( blueLightS0 + blueLightS7)/2);
+    if (m_unGreyFlag == 1)
+    {
+      m_unGreyFlag = 0;
+    }
+  }
 	/* TO HERE YOU NEED TO CREATE YOU FITNESS */
 
 	m_unNumberOfSteps++;
 	m_fComputedFitness += fitness;
+
+	/* Get Collisions */
+	int nContact = 0;
+	CContactSensor *m_seContact = (CContactSensor*) m_pcEpuck->GetSensor(SENSOR_CONTACT);
+	double* contact = m_seContact->GetSensorReading(m_pcEpuck);
+	for ( int j = 0 ; j < m_seContact->GetNumberOfInputs() ; j++)
+	{
+		if(contact[j] > 0.0)
+			nContact=1;
+	}
+
+	if ( nContact == 1 )
+		m_unCollisionsNumber++;
 }
 
 /******************************************************************************/
