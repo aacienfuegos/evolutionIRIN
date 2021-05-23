@@ -3,6 +3,7 @@
 
 #define SEARCH 	0
 #define DEPOSIT 1
+#define RED_BATTERY_THRESHOLD 0.5
 /******************************************************************************/
 /******************************************************************************/
 
@@ -38,6 +39,8 @@ CIriFitnessFunction::CIriFitnessFunction(const char* pch_name,
 	m_unCollisionsNumber= 0;
 	m_unGreyFlag = 0;
 	m_unGreyCounter = 0;
+	
+	m_unRedBatteryFlag = 0;
 }
 
 /******************************************************************************/
@@ -124,6 +127,8 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 	double blueLightS7=0;
 	double lightS0=0;
 	double lightS7=0;
+	double redLightS0=0;
+	double redLightS7=0;
 
 	/* Auxiluar variables */
 	unsigned int unThisSensorsNumberOfInputs;
@@ -215,6 +220,10 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 					{
 						maxRedLightSensorEval = pfThisSensorInputs[j];
 					}
+					if (j==0)
+						redLightS0 = pfThisSensorInputs[j];
+					else if (j==7)
+						redLightS7 = pfThisSensorInputs[j];
 				}
 				break;
 
@@ -273,6 +282,14 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
       m_unGreyFlag = 0;
     }
   }
+
+	if(redBattery[0] < RED_BATTERY_THRESHOLD){
+		m_unRedBatteryFlag = 1;
+		fitness *= (( redLightS0 + redLightS7)/2);
+	}
+	else {
+		m_unRedBatteryFlag = 0;
+	}
 	/* TO HERE YOU NEED TO CREATE YOU FITNESS */
 
 	m_unNumberOfSteps++;

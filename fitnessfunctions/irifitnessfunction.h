@@ -46,6 +46,7 @@ protected:
 		unsigned int m_unGreyFlag;
 		unsigned int m_unGreyCounter;
 
+		unsigned int m_unRedBatteryFlag;
 };
 
 /******************************************************************************/
