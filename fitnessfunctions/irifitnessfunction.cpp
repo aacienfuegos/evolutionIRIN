@@ -1,11 +1,13 @@
 #include "irifitnessfunction.h"
 #include "collisionmanager.h"
 
+#define SEARCH 	0
+#define DEPOSIT 1
 /******************************************************************************/
 /******************************************************************************/
 
-CIriFitnessFunction::CIriFitnessFunction(const char* pch_name, 
-                                                                 CSimulator* pc_simulator, 
+CIriFitnessFunction::CIriFitnessFunction(const char* pch_name,
+                                                                 CSimulator* pc_simulator,
                                                                  unsigned int un_collisions_allowed_per_epuck)
     :
     CFitnessFunction(pch_name, pc_simulator)
@@ -14,7 +16,7 @@ CIriFitnessFunction::CIriFitnessFunction(const char* pch_name,
 	/* Check number of robots */
 	m_pcSimulator = pc_simulator;
 	TEpuckVector* pvecEpucks=m_pcSimulator->GetEpucks();
-	
+
 	if ( pvecEpucks->size() == 0 )
 	{
 		printf("No Robot, so fitness function can not be computed.\n Exiting...\n");
@@ -25,12 +27,17 @@ CIriFitnessFunction::CIriFitnessFunction(const char* pch_name,
 	{
 		printf("More than 1 robot, and fitness is not prepared for it.\n Exiting...\n");
 	}
-    
+
 	m_pcEpuck=(*pvecEpucks)[0];
 
 	m_unNumberOfSteps = 0;
 	m_fComputedFitness = 0.0;
-	
+	m_unState = SEARCH;
+
+
+	m_unCollisionsNumber= 0;
+	m_unGreyFlag = 0;
+	m_unGreyCounter = 0;
 }
 
 /******************************************************************************/
@@ -42,17 +49,24 @@ CIriFitnessFunction::~CIriFitnessFunction(){
 /******************************************************************************/
 
 double CIriFitnessFunction::GetFitness()
-{    
+{
 
-	/* If you need to check the collisions of the robot, here are the total number of 
+	/* If you need to check the collisions of the robot, here are the total number of
 	 * collisions done by the robot in the simulations */
-	int coll = (CCollisionManager::GetInstance()->GetTotalNumberOfCollisions());
+	/* int coll = (CCollisionManager::GetInstance()->GetTotalNumberOfCollisions()); */
 
 	/* Get the fitness divided by the number of steps */
-	double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(coll,10.0)/10.0)));
+	/* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(coll,10.0)/10.0))); */
 
 	/* If fitness less than 0, put it to 0 */
-	if ( fit < 0.0 ) fit = 0.0;
+	/* if ( fit < 0.0 ) fit = 0.0; */
+
+  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 ));
+  if (m_unGreyFlag == 0 )
+    fit /= 10.0;
+
+  if ( fit < 0.0 ) fit = 0.0;
+  if ( fit > 1.0 ) fit = 1.0;
 
 	return fit;
 }
@@ -81,7 +95,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 
 	/* Eval same direction partial fitness */
 	double sameDirectionEval = 1 - sqrt(fabs(leftSpeed - rightSpeed));
-	
+
 	/* Eval SENSORS */
 
 	/* Where the Max PROXIMITY sensor will be stored*/
@@ -112,9 +126,9 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 	double lightS7=0;
 
 	/* Auxiluar variables */
-	unsigned int unThisSensorsNumberOfInputs; 
-	double* pfThisSensorInputs; 
-	
+	unsigned int unThisSensorsNumberOfInputs;
+	double* pfThisSensorInputs;
+
 	/* Go in all the sensors */
 	TSensorVector vecSensors = m_pcEpuck->GetSensors();
 	for (TSensorIterator i = vecSensors.begin(); i != vecSensors.end(); i++)
@@ -134,7 +148,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				{
 					/* If reading bigger than maximum */
 					if ( pfThisSensorInputs[j] > maxProxSensorEval )
-					{	
+					{
 						/* Store maximum value */
 						maxProxSensorEval = pfThisSensorInputs[j];
 					}
@@ -146,12 +160,12 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				/* Get the actual value */
 				groundMemory = (*i)->GetComputedSensorReadings();
 				break;
-	
+
 			/* If sensor is GROUND */
 			case SENSOR_GROUND:
 				/* Get actual values */
 				ground = (*i)->GetComputedSensorReadings();
-				break;	
+				break;
 			/* If sensor is LIGHT */
 			case SENSOR_REAL_LIGHT:
 				/* Get number of inputs */
@@ -164,7 +178,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				{
 					/* If reading bigger than maximum */
 					if ( pfThisSensorInputs[j] > maxLightSensorEval )
-					{	
+					{
 						/* Store maximum value */
 						maxLightSensorEval = pfThisSensorInputs[j];
 					}
@@ -181,7 +195,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				for (int j = 0; j < unThisSensorsNumberOfInputs; j++)
 				{
 					if ( pfThisSensorInputs[j] > maxBlueLightSensorEval )
-					{	
+					{
 						maxBlueLightSensorEval = pfThisSensorInputs[j];
 					}
 					if (j==0)
@@ -190,7 +204,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 						blueLightS7 = pfThisSensorInputs[j];
 				}
 				break;
-			
+
 			case SENSOR_REAL_RED_LIGHT:
 				unThisSensorsNumberOfInputs = (*i)->GetNumberOfInputs();
 				pfThisSensorInputs = (*i)->GetComputedSensorReadings();
@@ -198,7 +212,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				for (int j = 0; j < unThisSensorsNumberOfInputs; j++)
 				{
 					if ( pfThisSensorInputs[j] > maxRedLightSensorEval )
-					{	
+					{
 						maxRedLightSensorEval = pfThisSensorInputs[j];
 					}
 				}
@@ -208,15 +222,15 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 			case SENSOR_BATTERY:
          battery = (*i)->GetComputedSensorReadings();
 				 break;
-			
+
 			case SENSOR_BLUE_BATTERY:
 				blueBattery = (*i)->GetComputedSensorReadings();
 				break;
-			
+
 			case SENSOR_RED_BATTERY:
 				redBattery = (*i)->GetComputedSensorReadings();
 				break;
-			
+
 			/* If sensor is CONTACT */
 			case SENSOR_CONTACT:
 				/* Get number of inputs */
@@ -237,12 +251,12 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				break;
 		}
 	}
-	
-	/* FROM HERE YOU NEED TO CREATE YOU FITNESS */	
+
+	/* FROM HERE YOU NEED TO CREATE YOU FITNESS */
 
 	double fitness = 1.0;
-	
-	/* TO HERE YOU NEED TO CREATE YOU FITNESS */	
+
+	/* TO HERE YOU NEED TO CREATE YOU FITNESS */
 
 	m_unNumberOfSteps++;
 	m_fComputedFitness += fitness;

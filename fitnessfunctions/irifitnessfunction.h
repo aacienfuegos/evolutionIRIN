@@ -14,6 +14,13 @@ class CIriFitnessFunction;
 
 #include "fitnessfunction.h"
 #include "simulator.h"
+#include "sensor.h"
+#include "batterysensor.h"
+#include "groundsensor.h"
+#include "groundmemorysensor.h"
+#include "lightsensor.h"
+#include "bluelightsensor.h"
+#include "contactsensor.h"
 
 /******************************************************************************/
 /******************************************************************************/
@@ -30,7 +37,14 @@ public:
 protected:
 		unsigned int m_unNumberOfSteps;
 		double 			m_fComputedFitness;
+		unsigned int m_unState;
+
 		CEpuck* m_pcEpuck;
+		CBatterySensor* m_seBattery;
+
+		unsigned int m_unCollisionsNumber;
+		unsigned int m_unGreyFlag;
+		unsigned int m_unGreyCounter;
 
 };
 
@@ -38,3 +52,4 @@ protected:
 /******************************************************************************/
 
 #endif
+
