@@ -59,8 +59,7 @@ double CGarbageFitnessFunction::GetFitness()
   /* End Exp2 */
 
   /* Start Exp3-5, Exp6-C , Exp 7-8*/
-  /* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )); */
-	double fit = 0.5
+  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 ));
   if (m_unGreyFlag == 0 )
     fit /= 10.0;
   /* End Exp3-6 */
