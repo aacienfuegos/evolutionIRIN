@@ -265,31 +265,32 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 
 	double fitness = 1.0;
 
-  if (groundMemory[0] > 0.0)
-  {
-    fitness *= ( lightS0 + lightS7)/2;
-    if (m_unGreyFlag == 0)
-    {
-      m_unGreyFlag = 1;
-      m_unGreyCounter++;
-    }
-  }
-  else
-  {
-    fitness *= (( blueLightS0 + blueLightS7)/2);
-    if (m_unGreyFlag == 1)
-    {
-      m_unGreyFlag = 0;
-    }
-  }
+	if(redBattery[0] < RED_BATTERY_THRESHOLD){
+		m_unRedBatteryFlag = 1;
+		fitness *= (( redLightS0 + redLightS7)/2);
+	}
+	else {
+		m_unRedBatteryFlag = 0;
+		if (groundMemory[0] > 0.0)
+		{
+		fitness *= ( lightS0 + lightS7)/2;
+		if (m_unGreyFlag == 0)
+			{
+			  m_unGreyFlag = 1;
+			  m_unGreyCounter++;
+			}
+		}
+		else
+		{
+			fitness *= (( blueLightS0 + blueLightS7)/2);
+			if (m_unGreyFlag == 1)
+			{
+			  m_unGreyFlag = 0;
+			}
+		}
+}
 
-	/* if(redBattery[0] < RED_BATTERY_THRESHOLD){ */
-	/* 	m_unRedBatteryFlag = 1; */
-	/* 	fitness *= (( redLightS0 + redLightS7)/2); */
-	/* } */
-	/* else { */
-	/* 	m_unRedBatteryFlag = 0; */
-	/* } */
+
 	/* TO HERE YOU NEED TO CREATE YOU FITNESS */
 
 	m_unNumberOfSteps++;
