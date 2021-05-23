@@ -177,7 +177,7 @@ double				g_fUpperBounds										= 1.0;										// Upper Weight Limit
 double 				g_fLowerBounds										= 0.0;										// Lower Weight Limit
 
 bool 					g_bEvolutionaryExperiment 	= false;	// Evolutionary experiment flag
-bool 					g_bRestartEvolution 				= false;	// Restart evolution flag
+bool 					g_bRestartEvolution 				= true;	// Restart evolution flag
 bool 					g_bRandomizeFirstGeneration = false;	// First Generation random flag
 bool 					g_bWriteToFiles             = true;		// Write to files flag
 bool 					g_bNNParameters							= false;

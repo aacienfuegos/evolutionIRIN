@@ -13,6 +13,7 @@ killgroup(){
 }
 
 git pull
+make
 ./irsim -E 21 -p paramFiles/iriNeuronTesting.txt -e &
 #./irsim -E 21 -p paramFiles/breaking.txt -e &
 #./irsim -E 24 -p paramFiles/iriNeuronTesting.txt -e &
