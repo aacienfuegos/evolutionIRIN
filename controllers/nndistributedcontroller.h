@@ -23,6 +23,7 @@ class CNNDistributedController;
 #include "controller.h"
 #include "layercontroller.h"
 #include "contactsensor.h"
+#include "redbatterysensor.h"
 #include "collisionmanager.h"
 /******************************************************************************/
 /******************************************************************************/
