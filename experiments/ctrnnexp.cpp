@@ -37,7 +37,7 @@
 using namespace std;
 
 /*Create Arena */
-static const char* pchHeightMap = 
+static char* pchHeightMap = 
 "%%%%%%%%%%%%%%%%%%%%"
 "%##################%"
 "%##################%"
@@ -256,7 +256,7 @@ CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
 
     ifstream pfile(paramsFile);
     if(!pfile) {
-      cerr << "Can't find parameters file " << endl;
+      cerr << "Can't find parameters file " << pfile << endl;
       exit(0);
     }	
 
@@ -789,7 +789,7 @@ void CCTRNNExp::CreateAndAddEpucks(CSimulator* pc_simulator)
 	char label[100] = "epuck";    
 	for (int i = 0; i < m_nRobotsNumber; i++)
 	{
-		sprintf(label, "epuck%.4d", i);
+		sprintf(label, "epuck%0.4d", i);
 		CEpuck* pcEpuck = CreateEpuck(label, m_pcvRobotPositions[i].x, m_pcvRobotPositions[i].y, m_fRobotOrientations[i]);
 		pc_simulator->AddEpuck(pcEpuck);
 		pc_simulator->SetTimeLimit(m_nRunTime);
@@ -942,6 +942,114 @@ void CCTRNNExp::RandomPositionAndOrientation ( void )
 		it++;
 		i++;
 	}
+
+  /* CODE FOR Garbage - Exp 8a */
+  //CArena* pc_arena=m_pcSimulator->GetArena();
+
+  ///* Get a random x,y pair for all blueLightObjets */
+  //dVector2 vCenter[m_nBlueLightObjectNumber];
+  //for( int i = 0 ; i < m_nBlueLightObjectNumber ; i++)
+  //{
+    //vCenter[i].x = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+    //vCenter[i].y = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+  //}
+
+  ///* DEBUG */
+  ////for( int i = 0 ; i < m_nBlueLightObjectNumber ; i++)
+  ////printf("RandomCenter %d: %2f, %2f\n", i, vCenter[i].x, vCenter[i].y);
+  ///* END DEBUG */
+
+  ///* Set all grey areas on the x,y pair of bluelightobjets */
+  //vector<CGroundArea*> vGroundAreas=pc_arena->GetGroundAreas();
+  //vector<CGroundArea*>::iterator it_ground=vGroundAreas.begin();
+
+  //int nCounter = 0;
+  //double f_color;
+  //while(it_ground!=vGroundAreas.end())
+  //{
+    //(*it_ground)->GetColor(&f_color);
+    //if (f_color == 0.5)
+    //{
+      //(*it_ground)->SetCenter(vCenter[nCounter]);
+      //nCounter++;
+      ///* DEBUG */
+      ////printf("RandomCenter %d: %2f, %2f\n", nCounter, vCenter[i].x, vCenter[i].y);
+      ///* END DEBUG */
+    //}
+
+    //it_ground++;
+  //}
+
+  //nCounter = 0;
+
+  ///* Set all bluelightobjets on the x,y pair of bluelightobjets */
+  //vector<CBlueLightObject*> vLightObject=pc_arena->GetBlueLightObject();
+  //vector<CBlueLightObject*>::iterator it_lightobject=vLightObject.begin();
+
+  //while(it_lightobject!=vLightObject.end())
+  //{
+    //(*it_lightobject)->SetCenter(vCenter[nCounter]);
+    //nCounter++;
+    //it_lightobject++;
+  //}
+  /* END CODE FOR Garbage - Exp 8a */
+  
+  /* CODE FOR Garbage - Exp 8b */
+  //CArena* pc_arena=m_pcSimulator->GetArena();
+  
+  ///* Get a random x,y pair for all ground areas */
+  //dVector2 vCenter[m_nNumberOfGroundArea];
+  //for( int i = 0 ; i < m_nNumberOfGroundArea ; i++)
+  //{
+    //vCenter[i].x = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+    //vCenter[i].y = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+  //}
+
+  ///* DEBUG */
+  ////for( int i = 0 ; i < m_nBlueLightObjectNumber ; i++)
+  ////printf("RandomCenter %d: %2f, %2f\n", i, vCenter[i].x, vCenter[i].y);
+  ///* END DEBUG */
+
+  ///* Set all areas on the x,y pair of ground areas */
+  //vector<CGroundArea*> vGroundAreas=pc_arena->GetGroundAreas();
+  //vector<CGroundArea*>::iterator it_ground=vGroundAreas.begin();
+
+  //int nCounter = 0;
+  //double f_color;
+  //while(it_ground!=vGroundAreas.end())
+  //{
+    //(*it_ground)->SetCenter(vCenter[nCounter]);
+      ///* DEBUG */
+      ////printf("RandomCenter %d: %2f, %2f\n", nCounter, vCenter[i].x, vCenter[i].y);
+      ///* END DEBUG */
+      
+    //nCounter++;
+    //it_ground++;
+  //}
+ 
+  ///* We know there is only 1 black arena (first on the array) and 1 yellow light */
+  //nCounter = 0;
+  //vector<CLightObject*> vLightObject=pc_arena->GetLightObject();
+  //vector<CLightObject*>::iterator it_lightobject=vLightObject.begin();
+
+  //while(it_lightobject!=vLightObject.end())
+  //{
+    //(*it_lightobject)->SetCenter(vCenter[nCounter]);
+    //nCounter++;
+    //it_lightobject++;
+  //}
+  
+  
+  //vector<CBlueLightObject*> vBlueLightObject=pc_arena->GetBlueLightObject();
+  //vector<CBlueLightObject*>::iterator it_bluelightobject=vBlueLightObject.begin();
+
+  //while(it_bluelightobject!=vBlueLightObject.end())
+  //{
+    //(*it_bluelightobject)->SetCenter(vCenter[nCounter]);
+    //nCounter++;
+    //it_bluelightobject++;
+  //}
+  /* END CODE FOR Garbage - Exp 8b*/
 
 	m_pcCollisionManager->Reset();
 }
