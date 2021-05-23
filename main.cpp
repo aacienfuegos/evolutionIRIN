@@ -95,8 +95,8 @@ using namespace std;
 #define FITNESSFUNCTION_AVOID 	1
 #define FITNESSFUNCTION_GARBAGE 2
 #define FITNESSFUNCTION_LOAD 		3
-#define FITNESSFUNCTION_IRI			4			
-#define FITNESSFUNCTION_LIGHT 5			
+#define FITNESSFUNCTION_IRI			4
+#define FITNESSFUNCTION_LIGHT 5
 
 #define AVERAGE_FITNESS   0
 #define BEST_FITNESS      1
@@ -126,7 +126,7 @@ void 							RunEvolutionaryAlgorithm ( void ); 																						// Run evol
 CPopulation* 			GetPopulation ( void );																												// Get Population
 unsigned int 			GetNumberOfLastGeneration ( void );																						// Get last Generation
 void 							LoadGeneration(CPopulation*  pc_population, unsigned int un_generation); 			// Load Generation
-double 						EvaluateIndividual(double* pf_chromosome, unsigned int un_chromosome_length);	// Evaluate an individual	
+double 						EvaluateIndividual(double* pf_chromosome, unsigned int un_chromosome_length);	// Evaluate an individual
 CFitnessFunction* GetFitnessFunction(int n_number, CSimulator* pc_simulator);										// Get fitness function
 
 
@@ -157,7 +157,7 @@ int 					g_nFitnessStagnationLimit 				= 0;										// Number of generations al
 unsigned int 	g_unFitnessLimitGenerations 			= 0;										// Max number of generations with max fitness allowed
 
 unsigned int  g_unPopulation 										= POPULATION_STANDARD;	// Population
-int  					g_nRestartFromGeneration 					= -1;										// Number to generation to be restarted. -1 None, any other number the generation
+int  					g_nRestartFromGeneration 					= maxgeneration;										// Number to generation to be restarted. -1 None, any other number the generation
 unsigned int	g_unNumberOfSamplesPerChromosome 	= 1;										// Number of evaluations per Chromosome (default to 1)
 unsigned int 	g_unDeleteSomePopulations					= 25; 									//each g_unDeleteSomePopulations generations the data of current one are written to file (default 25)
 char 					g_pchDirectory[256] 							= "geneticDataFiles";		// Genetic dir
@@ -173,13 +173,13 @@ int 					g_nCrossoverDistance  						= 1;										// Crossover Distance
 double 				g_fMutationRate       						= 0.05;									// Mutation rate
 int 					g_nNumberOfElites     						= 5;										// Number of Elites
 
-double				g_fUpperBounds										= 1.0;										// Upper Weight Limit 
+double				g_fUpperBounds										= 1.0;										// Upper Weight Limit
 double 				g_fLowerBounds										= 0.0;										// Lower Weight Limit
 
 bool 					g_bEvolutionaryExperiment 	= false;	// Evolutionary experiment flag
-bool 					g_bRestartEvolution 				= false;	// Restart evolution flag
+bool 					g_bRestartEvolution 				= true;	// Restart evolution flag
 bool 					g_bRandomizeFirstGeneration = false;	// First Generation random flag
-bool 					g_bWriteToFiles             = true;		// Write to files flag		
+bool 					g_bWriteToFiles             = true;		// Write to files flag
 bool 					g_bNNParameters							= false;
 
 bool 					g_bVisual 									= true;
@@ -200,37 +200,37 @@ int main(int argc, char** argv)
 
 		switch(argv[i][1]) {
 			/* Evolutionary Experiment */
-			case 'e': 
+			case 'e':
 				g_bEvolutionaryExperiment=true;
 				printf("Evolutionary mode selected\n");
 				break;
 
 			/* Set seed */
-			case 's':   
+			case 's':
 				++i;  // go to seed value
 				Random::seed = atoi(argv[i]);
 				printf("Set the seed: %ld\n",Random::seed);
 				break;
 
 			/* Produce frames */
-			case 'f': 
+			case 'f':
 				g_bProduceFrames=true;
 				printf("Frames will be produced in frames-directory\n");
 				break;
 
 			/* Set Experiment */
-			case 'E': 
+			case 'E':
 				if(i==argc-1){
 					printExpId();
 					exit(0);
 				}
 				i++;
 				if(argv[i][0] == '-'){
-					printExpId();  
+					printExpId();
 					exit(0);
 				}
 				g_unExperiment=atoi(argv[i]);
-				printf("EXPERIMENT: %d CHOOSEN.\n",g_unExperiment);	
+				printf("EXPERIMENT: %d CHOOSEN.\n",g_unExperiment);
 				sleep(1);
 				break;
 
@@ -247,12 +247,12 @@ int main(int argc, char** argv)
 				chromosomefilename = argv[i];
 				printf("chromosomefilename: %s CHOOSEN.\n",chromosomefilename);
 				break;
-		
+
 			case 'l':
 				g_bNNParameters = true;
 				printf("Create NN Parameters\n");
 				break;
-			
+
 			case 'v':
 				g_bVisual = false;
 				printf("No visual\n");
@@ -275,13 +275,13 @@ int main(int argc, char** argv)
 		/* Run evolution */
 		RunEvolutionaryAlgorithm();
 	}
-	
+
 	/* Standard Experiment */
 	else
 	{
 		/* Set up experiment */
 		SetUpExperiment(g_unExperiment);
-		
+
 		/* Select Arena */
 		int ArenaType = g_pcExperiment->GetSimulator()->GetArena()->GetArenaType();
 		/* Set if frames to be produce */
@@ -299,7 +299,7 @@ void SetUpExperiment(unsigned int exp){
 	switch (exp)
 	{
 		case WHEELS_EXP:
-			
+
 			printf("TEST WHEELS EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -370,7 +370,7 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 
 			break;
-		
+
 		case RED_LIGHT_EXP:
 
 			printf("TEST RED EXPERIMENT STARTED \n");
@@ -422,7 +422,7 @@ void SetUpExperiment(unsigned int exp){
 			else
 				g_pcRender=new CNullRender(g_pcSimulator);
       break;
-    
+
     case COMPASS_EXP:
       printf("TEST COMPASS EXPERIMENT STARTED \n");
       init_rng(&rng);
@@ -439,7 +439,7 @@ void SetUpExperiment(unsigned int exp){
         g_pcRender=new CNullRender(g_pcSimulator);
       break;
 		case BRAITENBERG_VEHICLE2:
-		
+
 			printf("BRAITENBERG VEHICLE 2 \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -455,9 +455,9 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 
 			break;
-	
+
 		case GROUND_EXP:
-		
+
 			printf("TEST GROUND EXPERIMENT STARTED\n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -473,9 +473,9 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 
 			break;
-	
+
 		case BATTERY_EXP:
-		
+
 			printf("TEST BATTERY EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -491,9 +491,9 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 
 			break;
-		
+
 		//case TEST_EVO:
-			
+
 			//printf("TEST EVOLUTIONARY ROBOTICS \n");
 			//init_rng(&rng);
 			///* Evolutionary Part */
@@ -506,7 +506,7 @@ void SetUpExperiment(unsigned int exp){
 			//g_pcSimulator = g_pcExperiment->CreateSimulator();
 			///* Add experiment to simulation */
 			//g_pcSimulator->AddChild(g_pcExperiment);
-			
+
 			///* If evolutionary, evol */
 			//if(g_bEvolutionaryExperiment){
 				//g_pcRender=new CNullRender(g_pcSimulator);
@@ -526,10 +526,10 @@ void SetUpExperiment(unsigned int exp){
 				//{
 					//sprintf(inputFile,"%s",chromosomefilename);
 				//}
-					
+
 				//ifstream in(inputFile);
 
-				//in >> g_unChromosomeLength; 
+				//in >> g_unChromosomeLength;
 				//double*      pfChromosome;
 				//pfChromosome = new double[g_unChromosomeLength];
 				//for ( int i = 0 ; i < g_unChromosomeLength ; i++ )
@@ -545,7 +545,7 @@ void SetUpExperiment(unsigned int exp){
 			//break;
 
 		case NEURON_EXP:
-			
+
 			printf("TEST NEURON EXP \n");
 			init_rng(&rng);
 
@@ -557,7 +557,7 @@ void SetUpExperiment(unsigned int exp){
 			g_pcSimulator = g_pcExperiment->CreateSimulator();
 			/* Add experiment to simulation */
 			g_pcSimulator->AddChild(g_pcExperiment);
-			
+
 			/* If evolutionary, evol */
 			if(g_bEvolutionaryExperiment)
 			{
@@ -565,7 +565,7 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 				g_pcSimulator->SetTimeLimit(g_fEvaluationTime);
 			}
-	
+
 			/* If not genetic and nor learning, load weights and create render */
 			else
 			{
@@ -591,10 +591,10 @@ void SetUpExperiment(unsigned int exp){
 				{
 					sprintf(inputFile,"%s",chromosomefilename);
 				}
-					
+
 				ifstream in(inputFile);
 
-				in >> g_unChromosomeLength; 
+				in >> g_unChromosomeLength;
 				double*      pfChromosome;
 				pfChromosome = new double[g_unChromosomeLength];
 				for ( int i = 0 ; i < g_unChromosomeLength ; i++ )
@@ -613,7 +613,7 @@ void SetUpExperiment(unsigned int exp){
 			break;
 
 		case CTRNN_EXP:
-			
+
 			printf("TEST NEURON EXP \n");
 			init_rng(&rng);
 
@@ -625,7 +625,7 @@ void SetUpExperiment(unsigned int exp){
 			g_pcSimulator = g_pcExperiment->CreateSimulator();
 			/* Add experiment to simulation */
 			g_pcSimulator->AddChild(g_pcExperiment);
-			
+
 			/* If evolutionary, evol */
 			if(g_bEvolutionaryExperiment)
 			{
@@ -633,7 +633,7 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 				g_pcSimulator->SetTimeLimit(g_fEvaluationTime);
 			}
-	
+
 			/* If not genetic and nor learning, load weights and create render */
 			else
 			{
@@ -659,10 +659,10 @@ void SetUpExperiment(unsigned int exp){
 				{
 					sprintf(inputFile,"%s",chromosomefilename);
 				}
-					
+
 				ifstream in(inputFile);
 
-				in >> g_unChromosomeLength; 
+				in >> g_unChromosomeLength;
 				double*      pfChromosome;
 				pfChromosome = new double[g_unChromosomeLength];
 				for ( int i = 0 ; i < g_unChromosomeLength ; i++ )
@@ -683,7 +683,7 @@ void SetUpExperiment(unsigned int exp){
 
 
 		case IRI1:
-		
+
 			printf("TEST IRI 1 EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -699,9 +699,9 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 
 			break;
-		
+
 		case IRI2:
-		
+
 			printf("TEST IRI 2 EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -720,7 +720,7 @@ void SetUpExperiment(unsigned int exp){
 
 
 		case IRI3:
-		
+
 			printf("TEST IRI 3 EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -736,9 +736,9 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CNullRender(g_pcSimulator);
 
 			break;
-		
+
 		case SUBSUMPTION_GARBAGE:
-		
+
 			printf("SUBSUMPTION GARBAGE EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -752,11 +752,11 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CSimpleDrawStuffRender(g_pcExperiment->GetSimulator(),0,NULL);
 			else
 				g_pcRender=new CNullRender(g_pcSimulator);
-			
+
 			break;
 
 		case SUBSUMPTION_LIGHT:
-		
+
 			printf("SUBSUMPTION LIGHT EXPERIMENT STARTED \n");
 			init_rng(&rng);
 			/* Create new experiment */
@@ -770,9 +770,9 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CSimpleDrawStuffRender(g_pcExperiment->GetSimulator(),0,NULL);
 			else
 				g_pcRender=new CNullRender(g_pcSimulator);
-			
+
 			break;
-	
+
 		//case TEST_COM:
 			//printf("TEST COM EXPERIMENT STARTED\n");
 			//init_rng(&rng);
@@ -787,7 +787,7 @@ void SetUpExperiment(unsigned int exp){
 				//g_pcRender=new CSimpleDrawStuffRender(g_pcExperiment->GetSimulator(),0,NULL);
 			//else
 				//g_pcRender=new CNullRender(g_pcSimulator);
-			
+
 			//break;
 
 		case TEST_SWITCH_LIGHT:
@@ -804,7 +804,7 @@ void SetUpExperiment(unsigned int exp){
 				g_pcRender=new CSimpleDrawStuffRender(g_pcExperiment->GetSimulator(),0,NULL);
 			else
 				g_pcRender=new CNullRender(g_pcSimulator);
-			
+
 			break;
 
 		/* No valid experiment */
@@ -899,7 +899,7 @@ void RunEvolutionaryAlgorithm()
         sprintf(pchTerminationReason, "Fitness limit (%.5f) exceeded %.5f by generation %d", g_fFitnessLimit, fGlobalFitness, unCurrentGeneration-1);
         break;
       }
-    } 
+    }
     else {
       unConsecutiveFitnessLimitGenerations = 0;
     }
@@ -909,7 +909,7 @@ void RunEvolutionaryAlgorithm()
     {
       printf("Creating random generation...\n");
       pcPopulation->CreateRandomPopulation(g_unChromosomes);
-    } 
+    }
     else {
       pcPopulation->CreateNextGeneration();
     }
@@ -965,7 +965,7 @@ void RunEvolutionaryAlgorithm()
         }
         if (fThisSampleFitness > fBestSampleFitness){
           fBestSampleFitness = fThisSampleFitness;
-        }	
+        }
       }
       //printf("Number of samples for this chromosome has reached max, next one\n");
       // Set the result depending on if we should use the best, average or worst fitess among the samples:
@@ -1360,19 +1360,19 @@ CFitnessFunction* GetFitnessFunction(int n_number, CSimulator* pc_simulator)
 			break;
 
 		case FITNESSFUNCTION_AVOID:
-			pcFitnessFunction=new CAvoidCollisionsFitnessFunction("AvoidCollisionsFitnessFunction", pc_simulator, 1);	
+			pcFitnessFunction=new CAvoidCollisionsFitnessFunction("AvoidCollisionsFitnessFunction", pc_simulator, 1);
 			break;
 
 		case FITNESSFUNCTION_GARBAGE:
-			pcFitnessFunction=new CGarbageFitnessFunction("GarbageFitnessFunction", pc_simulator, 1);	
+			pcFitnessFunction=new CGarbageFitnessFunction("GarbageFitnessFunction", pc_simulator, 1);
 			break;
 
 		case FITNESSFUNCTION_LOAD:
-			pcFitnessFunction=new CLoadFitnessFunction("LoadFitnessFunction", pc_simulator, 1);	
+			pcFitnessFunction=new CLoadFitnessFunction("LoadFitnessFunction", pc_simulator, 1);
 			break;
-	
+
 		case FITNESSFUNCTION_IRI:
-			pcFitnessFunction=new CIriFitnessFunction("IriFitnessFunction", pc_simulator, 1);	
+			pcFitnessFunction=new CIriFitnessFunction("IriFitnessFunction", pc_simulator, 1);
 			break;
 
 		case FITNESSFUNCTION_LIGHT:
@@ -1384,7 +1384,7 @@ CFitnessFunction* GetFitnessFunction(int n_number, CSimulator* pc_simulator)
 			printf("Unknown fitness function %d", n_number);
 			break;
 	}
-	
+
 	return pcFitnessFunction;
 }
 
@@ -1415,7 +1415,7 @@ void usage(){
 
 void printExpId()
 {
-	printf("\nEXPERIMENTS IDENTIFIERS\n");	
+	printf("\nEXPERIMENTS IDENTIFIERS\n");
 	printf("\n");
 	printf("1 - TEST WHEELS EXPERIMENT\n");
 	printf("2 - TEST CONTACT SENSOR EXPERIMENT\n");
@@ -1517,7 +1517,7 @@ void GetGeneticParameters ( const char* param_file )
 		getDouble('=',pfile);
 		getDouble('=',pfile);
 	}
-	
+
 	/* Skip red light objects */
 	double fRedLightObjects = getDouble('=',pfile);
 	for ( int i = 0 ; i < fRedLightObjects ; i++ )
@@ -1559,22 +1559,22 @@ void GetGeneticParameters ( const char* param_file )
 	getDouble('=',pfile);
 
 	/* Get GENETIC info */
-	g_unChromosomeLength 	= getInt('=', pfile);  						
-	g_unChromosomes 			= getInt('=',pfile);       						
-	g_unGenerations 			= getInt('=',pfile);									
-	g_fEvaluationTime 		= getInt('=',pfile);    						
-	g_bIsCrossoverOn 			= getInt('=',pfile);							
-	g_nNumberOfCrossovers = getInt('=',pfile);						
-	g_nCrossoverDistance  = getInt('=',pfile);						
-	g_fMutationRate       = getDouble('=',pfile);						
-	g_nNumberOfElites     = getInt('=',pfile);					
+	g_unChromosomeLength 	= getInt('=', pfile);
+	g_unChromosomes 			= getInt('=',pfile);
+	g_unGenerations 			= getInt('=',pfile);
+	g_fEvaluationTime 		= getInt('=',pfile);
+	g_bIsCrossoverOn 			= getInt('=',pfile);
+	g_nNumberOfCrossovers = getInt('=',pfile);
+	g_nCrossoverDistance  = getInt('=',pfile);
+	g_fMutationRate       = getDouble('=',pfile);
+	g_nNumberOfElites     = getInt('=',pfile);
 	g_unFitnessFunction		= getInt('=',pfile);
 	g_unNumberOfSamplesPerChromosome = getInt('=',pfile);
-	g_unRandomPositionOrientation = getInt('=',pfile); 
+	g_unRandomPositionOrientation = getInt('=',pfile);
 	// Skip Init Area -> Will be obtained by neuron exp
-	getDouble('=',pfile); 
-	getDouble('=',pfile); 
-	
+	getDouble('=',pfile);
+	getDouble('=',pfile);
+
 	/* Weights info from NEURAL */
 	g_fUpperBounds 				= getDouble('=',pfile);
 	g_fLowerBounds 				= getDouble('=',pfile);
