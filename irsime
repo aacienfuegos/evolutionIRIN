@@ -14,5 +14,6 @@ killgroup(){
 
 git pull
 ./irsim -E 21 -p paramFiles/iriNeuronTemplate.txt -e &
+#./irsim -E 24 -p paramFiles/iriNeuronTemplate.txt -e &
 ./autopush 2&>autopush.log &
 wait

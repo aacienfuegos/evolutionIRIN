@@ -1,7 +1,7 @@
 #!/bin/sh
 
 while true; do
-	sleep 20m
+	#sleep 20m
 
 	inotifywait -q -e close_write --format '%w' geneticDataFiles/currentbest |
 	git add geneticDataFiles/currentbest
