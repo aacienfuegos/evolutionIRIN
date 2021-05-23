@@ -157,7 +157,7 @@ int 					g_nFitnessStagnationLimit 				= 0;										// Number of generations al
 unsigned int 	g_unFitnessLimitGenerations 			= 0;										// Max number of generations with max fitness allowed
 
 unsigned int  g_unPopulation 										= POPULATION_STANDARD;	// Population
-int  					g_nRestartFromGeneration 					= maxgeneration;										// Number to generation to be restarted. -1 None, any other number the generation
+int  					g_nRestartFromGeneration 					= FILENAME_MAXGENERATION;										// Number to generation to be restarted. -1 None, any other number the generation
 unsigned int	g_unNumberOfSamplesPerChromosome 	= 1;										// Number of evaluations per Chromosome (default to 1)
 unsigned int 	g_unDeleteSomePopulations					= 25; 									//each g_unDeleteSomePopulations generations the data of current one are written to file (default 25)
 char 					g_pchDirectory[256] 							= "geneticDataFiles";		// Genetic dir
