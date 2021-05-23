@@ -46,8 +46,8 @@ GROUND AREA 4 COLOR (0.0 Black, 0.5 Grey)	= 0.5
 %%%%%%%%%%%%%%% SENSORS %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-LIGHT SENSOR RANGE (meters)						= 2.0
-BLUE LIGHT SENSOR RANGE (meters)			= 1.0
+LIGHT SENSOR RANGE (meters)						= 5.0
+BLUE LIGHT SENSOR RANGE (meters)			= 5.0
 RED LIGHT SENSOR RANGE (meters)				= 1.0
 BATTERY SENSOR RANGE (meters)					= 0.5
 BATTERY CHARGE COEF 									= 0.01
