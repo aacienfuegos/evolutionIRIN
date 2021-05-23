@@ -64,7 +64,7 @@ double CIriFitnessFunction::GetFitness()
 	/* If fitness less than 0, put it to 0 */
 	/* if ( fit < 0.0 ) fit = 0.0; */
 
-  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 ));
+  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * redBattery[0];
   if (m_unGreyFlag == 0 )
     fit /= 10.0;
 
@@ -121,7 +121,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 	/* whre the BLUE BATTERY will be sotored */
 	double *blueBattery;
 	/* whre the RED BATTERY will be sotored */
-	double *redBattery;
+	/* double *redBattery; */
 
 	double blueLightS0=0;
 	double blueLightS7=0;
