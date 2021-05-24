@@ -39,7 +39,7 @@ CIriFitnessFunction::CIriFitnessFunction(const char* pch_name,
 	m_unCollisionsNumber= 0;
 	m_unGreyFlag = 0;
 	m_unGreyCounter = 0;
-	
+
 	m_unRedBatteryFlag = 0;
 }
 
@@ -65,7 +65,8 @@ double CIriFitnessFunction::GetFitness()
 	/* if ( fit < 0.0 ) fit = 0.0; */
 
   /* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )); */
-  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * redBattery[0];
+  /* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * redBattery[0]; */
+  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * (fmin(redBattery[0], 0.7)/0.7);
 
   if (m_unGreyFlag == 0 )
     fit /= 10.0;
