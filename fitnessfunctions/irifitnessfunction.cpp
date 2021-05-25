@@ -65,13 +65,13 @@ double CIriFitnessFunction::GetFitness()
 	/* if ( fit < 0.0 ) fit = 0.0; */
 
 	/* exp1, exp3 */
-  /* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )); */
+  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 ));
 
 	/* exp2, exp4 */
   /* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * redBattery[0]; */
 
 	/* exp5, exp6 */
-  double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * (fmin(redBattery[0], 0.7)/0.7);
+  /* double fit = ( m_fComputedFitness / (double) m_unNumberOfSteps ) * (1 - ((double) (fmin(m_unCollisionsNumber,30.0)/30.0))) * ( (double) (fmin(m_unGreyCounter, 5.0)/ 5.0 )) * (fmin(redBattery[0], 0.7)/0.7); */
 
 
   if (m_unGreyFlag == 0 )
