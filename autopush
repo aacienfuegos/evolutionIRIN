@@ -3,7 +3,7 @@
 while true; do
 	sleep 20m
 
-	#inotifywait -q -e close_write --format '%w' geneticDataFiles/currentbest |
+	inotifywait -q -e close_write --format '%w' geneticDataFiles/currentbest |
 	git add geneticDataFiles/currentbest
 	git commit -q -m "auto update: new best at $(date +%d/%m/%y-%R)"
 	git push -q
