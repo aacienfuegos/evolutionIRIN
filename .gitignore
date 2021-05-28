@@ -15,6 +15,7 @@ configure
 depcomp
 frame/*
 !frame/README.md
+!fitness.log
 install-sh
 irsim
 missing
