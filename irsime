@@ -5,7 +5,7 @@ trap killgroup SIGINT
 killgroup(){
 	echo killing...
 
-	git add geneticDataFiles/currentbest
+	git add geneticDataFiles/currentbest geneticDataFiles/fitness.log
 	git commit -q -m "auto update: new best at $(date +%d/%m/%y-%R)"
 	git push -q
 
