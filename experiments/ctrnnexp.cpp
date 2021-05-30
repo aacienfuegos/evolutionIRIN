@@ -37,7 +37,7 @@
 using namespace std;
 
 /*Create Arena */
-static const char* pchHeightMap = 
+static char* pchHeightMap =
 "%%%%%%%%%%%%%%%%%%%%"
 "%##################%"
 "%##################%"
@@ -108,7 +108,7 @@ extern long int rngSeed;
 
 CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
     unsigned int un_chromosome_length, unsigned int un_fitness_function,
-    double f_evaluation_time, double f_upper_bounds, double f_lower_bounds, 
+    double f_evaluation_time, double f_upper_bounds, double f_lower_bounds,
     bool b_evolutionary_flag, bool b_learning_flag) :
   CExperiment(pch_name, COLLISION_MODEL_SIMPLE, COLLISION_HANDLER_POSITION)
 {
@@ -243,11 +243,11 @@ CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
     /* Learning parameters */
     m_unLearningLayerFlag = new unsigned int [m_unNumberOfLayers];
     m_unEvoDevoLayerFlag = new unsigned int [m_unNumberOfLayers];
-    m_unLearningDiagonalFlag = new unsigned int [m_unNumberOfLayers];	
+    m_unLearningDiagonalFlag = new unsigned int [m_unNumberOfLayers];
     /* learning coef */
     m_fEta = 0.02;
     /* forget coef */
-    m_fEpsilon = 0.002;	
+    m_fEpsilon = 0.002;
   }
 
   /* Read From param file */
@@ -258,7 +258,7 @@ CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
     if(!pfile) {
       cerr << "Can't find parameters file " << endl;
       exit(0);
-    }	
+    }
 
     /* EXTRA */
 
@@ -339,11 +339,11 @@ CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
 
     /* SENSORS */
     /* Get Light Range */
-    m_fLightSensorRange = getDouble('=',pfile); 
+    m_fLightSensorRange = getDouble('=',pfile);
     /* Get Blue Light Range */
-    m_fBlueLightSensorRange = getDouble('=',pfile); 
+    m_fBlueLightSensorRange = getDouble('=',pfile);
     /* Get Red Light Range */
-    m_fRedLightSensorRange = getDouble('=',pfile); 
+    m_fRedLightSensorRange = getDouble('=',pfile);
 
     /* Get Battery load range */
     m_fBatterySensorRange = getDouble('=',pfile);
@@ -542,7 +542,7 @@ CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
     m_unLayerSensorType = new unsigned int[m_unNumberOfLayers];
     for ( int i = 0 ; i < m_unNumberOfLayers ; i++ )
     {
-      m_unLayerSensorType[i] = getInt('=',pfile);	
+      m_unLayerSensorType[i] = getInt('=',pfile);
       if (m_unLayerSensorType[i] == SENSOR_LIGHT)
         m_unLayerSensorType[i] = SENSOR_REAL_LIGHT;
       if (m_unLayerSensorType[i] == SENSOR_BLUE_LIGHT)
@@ -586,11 +586,11 @@ CCTRNNExp::CCTRNNExp(const char* pch_name, const char* paramsFile,
     /* Learning parameters */
     m_unLearningLayerFlag = new unsigned int [m_unNumberOfLayers];
     m_unEvoDevoLayerFlag = new unsigned int [m_unNumberOfLayers];
-    m_unLearningDiagonalFlag = new unsigned int [m_unNumberOfLayers];	
+    m_unLearningDiagonalFlag = new unsigned int [m_unNumberOfLayers];
     /* learning coef */
     m_fEta = 0.02;
     /* forget coef */
-    m_fEpsilon = 0.002;	
+    m_fEpsilon = 0.002;
   }
 }
 
@@ -602,8 +602,8 @@ CCTRNNExp::~CCTRNNExp ( void )
 	/* Extra */
 	delete [] m_pcvRobotPositions;
 	delete [] m_fRobotOrientations;
-	
-	/* Environment */	
+
+	/* Environment */
 	delete [] m_pcvLightObjects;
 	delete [] m_pcvBlueLightObjects;
 	delete [] m_pcvRedLightObjects;
@@ -627,7 +627,7 @@ CCTRNNExp::~CCTRNNExp ( void )
 	delete [] m_unActivationFunction;
 	delete [] m_unLayersOutputs;
 
-	for ( int i = 0 ; i < m_unNumberOfLayers ; i++ ) 
+	for ( int i = 0 ; i < m_unNumberOfLayers ; i++ )
 	{
 		delete [] m_mAdjacencyMatrix[i];
 	}
@@ -667,7 +667,7 @@ CArena* CCTRNNExp::CreateArena()
 		pcBlueLightObject->SetCenter(m_pcvBlueLightObjects[i]);
 		pcArena->AddBlueLightObject(pcBlueLightObject);
 	}
-	
+
 	/* Create and add Red Light Object */
 	CRedLightObject* pcRedLightObject = NULL;
 	for( int i = 0 ; i < m_nRedLightObjectNumber ; i++){
@@ -676,7 +676,7 @@ CArena* CCTRNNExp::CreateArena()
 		pcRedLightObject->SetCenter(m_pcvRedLightObjects[i]);
 		pcArena->AddRedLightObject(pcRedLightObject);
 	}
-	
+
 	/* Create GroundArea */
 	char sGroundAreaName[100]="epuck";
 
@@ -723,42 +723,42 @@ void CCTRNNExp::AddSensors(CEpuck* pc_epuck)
 	CSensor* pcLightSensor = NULL;
 	pcLightSensor = new CRealLightSensor("Light Sensor", m_fLightSensorRange);
 	pc_epuck->AddSensor(pcLightSensor);
-	
+
 	//Blue Light Sensor
 	CSensor* pcBlueLightSensor = NULL;
 	pcBlueLightSensor = new CRealBlueLightSensor("Blue Light Sensor", m_fBlueLightSensorRange);
 	pc_epuck->AddSensor(pcBlueLightSensor);
-	
+
 	//Red Light Sensor
 	CSensor* pcRedLightSensor = NULL;
 	pcRedLightSensor = new CRealRedLightSensor("Red Light Sensor", m_fRedLightSensorRange);
 	pc_epuck->AddSensor(pcRedLightSensor);
-	
+
 	//Contact Sensor
 	CSensor* pcContactSensor = NULL;
 	pcContactSensor = new CContactSensor("Contact Sensor");
 	pc_epuck->AddSensor(pcContactSensor);
-	
+
 	//Ground Sensor
 	CSensor* pcGroundSensor = NULL;
 	pcGroundSensor = new CGroundSensor("Ground Sensor");
 	pc_epuck->AddSensor(pcGroundSensor);
-	
+
 	//Ground Memory Sensor
 	CSensor* pcGroundMemorySensor = NULL;
 	pcGroundMemorySensor = new CGroundMemorySensor("Ground Memory Sensor");
 	pc_epuck->AddSensor(pcGroundMemorySensor);
-	
+
 	//Battery Sensor
 	CSensor* pcBatterySensor = NULL;
 	pcBatterySensor = new CBatterySensor("Battery Sensor", m_fBatterySensorRange, m_fBatteryChargeCoef, m_fBatteryDischargeCoef);
 	pc_epuck->AddSensor(pcBatterySensor);
-	
+
 	//Blue Battery Sensor
 	CSensor* pcBlueBatterySensor = NULL;
 	pcBlueBatterySensor = new CBlueBatterySensor("Battery Sensor", m_fBlueBatterySensorRange, m_fBlueBatteryChargeCoef, m_fBlueBatteryDischargeCoef);
 	pc_epuck->AddSensor(pcBlueBatterySensor);
-	
+
 	//Red Battery Sensor
 	CSensor* pcRedBatterySensor = NULL;
 	pcRedBatterySensor = new CRedBatterySensor("Battery Sensor", m_fRedBatterySensorRange, m_fRedBatteryChargeCoef, m_fRedBatteryDischargeCoef);
@@ -786,10 +786,10 @@ void CCTRNNExp::SetController(CEpuck* pc_epuck)
 void CCTRNNExp::CreateAndAddEpucks(CSimulator* pc_simulator)
 {
 	/* Create and add epucks */
-	char label[100] = "epuck";    
+	char label[100] = "epuck";
 	for (int i = 0; i < m_nRobotsNumber; i++)
 	{
-		sprintf(label, "epuck%.4d", i);
+		sprintf(label, "epuck%0.4d", i);
 		CEpuck* pcEpuck = CreateEpuck(label, m_pcvRobotPositions[i].x, m_pcvRobotPositions[i].y, m_fRobotOrientations[i]);
 		pc_simulator->AddEpuck(pcEpuck);
 		pc_simulator->SetTimeLimit(m_nRunTime);
@@ -805,9 +805,9 @@ void CCTRNNExp::CreateAndAddEpucks(CSimulator* pc_simulator)
 void CCTRNNExp::Reset ( void )
 {
 	m_fFitness=0.0;
-	
-	double* pfpWeights = new double[m_unChromosomeLength];                       
-  //If not the controller must be the same               
+
+	double* pfpWeights = new double[m_unChromosomeLength];
+  //If not the controller must be the same
 	if ( m_unSampleNumber == 0 )
   {
 		for (int i = 0; i < m_unChromosomeLength; i++)
@@ -821,17 +821,17 @@ void CCTRNNExp::Reset ( void )
 
 	int i=0;
 	while(it!=(*vEpucks).end())
-  {                        
+  {
 		(*it)->SetCollisions(0);
 		if ( m_unSampleNumber == 0 )
-    {                                                                  
+    {
 			((CCTRNNDistributedController*)((*it)->GetController()))->SetWeights(m_unChromosomeLength, pfpWeights);
 		}
 
-		((CCTRNNDistributedController*)((*it)->GetController()))->Reset();        
+		((CCTRNNDistributedController*)((*it)->GetController()))->Reset();
 		//(*it)->SetPosition(0.0,0.0);
 		(*it)->SetPosition(m_pcvRobotPositions[i].x, m_pcvRobotPositions[i].y);
-		(*it)->SetRotation(m_fRobotOrientations[i]);                 
+		(*it)->SetRotation(m_fRobotOrientations[i]);
 
 		((CCollisionEpuck*)(*it))->UpdateCollisionPosition();
 
@@ -847,10 +847,10 @@ void CCTRNNExp::Reset ( void )
 		/* Reset ground memory sensor, needed to evolutionary */
 		CGroundMemorySensor* ground = (CGroundMemorySensor*) (*it)->GetSensor(SENSOR_GROUND_MEMORY);
 		ground->Reset();
-    
+
     /* Get arena */
     CArena* pc_arena = m_pcSimulator->GetArena();
-	
+
     vector<CLightObject*> vLightObject=pc_arena->GetLightObject();
 	  vector<CLightObject*>::iterator it_lightobject=vLightObject.begin();
 
@@ -859,7 +859,7 @@ void CCTRNNExp::Reset ( void )
       (*it_lightobject)->Reset();
       it_lightobject++;
     }
-	
+
     vector<CBlueLightObject*> vBlueLightObject=pc_arena->GetBlueLightObject();
     vector<CBlueLightObject*>::iterator it_bluelightobject=vBlueLightObject.begin();
     while(it_bluelightobject!=vBlueLightObject.end())
@@ -867,7 +867,7 @@ void CCTRNNExp::Reset ( void )
       (*it_bluelightobject)->Reset();
       it_bluelightobject++;
     }
-	
+
     vector<CRedLightObject*> vRedLightObject=pc_arena->GetRedLightObject();
     vector<CRedLightObject*>::iterator it_redlightobject=vRedLightObject.begin();
     while(it_redlightobject!=vRedLightObject.end())
@@ -875,12 +875,12 @@ void CCTRNNExp::Reset ( void )
       (*it_redlightobject)->Reset();
       it_redlightobject++;
     }
-		
+
 		it++;
 		i++;
 	}
 
-	delete [] pfpWeights;  
+	delete [] pfpWeights;
 
 	m_pcCollisionManager->Reset();
 }
@@ -894,9 +894,9 @@ void CCTRNNExp::RandomPositionAndOrientation ( void )
 	TEpuckIterator it=(*vEpucks).begin();
 
 	int i;
-	while(it!=(*vEpucks).end()){                        
+	while(it!=(*vEpucks).end()){
 		(*it)->SetCollisions(0);
-		
+
 		double randomX;
 		double randomY;
 		int robotsMounted;
@@ -921,7 +921,7 @@ void CCTRNNExp::RandomPositionAndOrientation ( void )
 
 					if( dist2 < 2 * (CEpuck::CHASSIS_RADIUS) ) { robotsMounted = 1; }
 				}
-			}	
+			}
 			while (robotsMounted == 1);
 		}
 
@@ -934,14 +934,122 @@ void CCTRNNExp::RandomPositionAndOrientation ( void )
 		(*it)->SetPosition(randomX, randomY);
 
 		float fInitialHeading=Random::nextDouble(-M_PI/2,M_PI/2);
-		(*it)->SetRotation(fInitialHeading);                 
+		(*it)->SetRotation(fInitialHeading);
 
 		//printf("X: %2f, Y: %2f, O: %2f\n", randomX, randomY, fInitialHeading);
 		((CCollisionEpuck*)(*it))->UpdateCollisionPosition();
-		
+
 		it++;
 		i++;
 	}
+
+  /* CODE FOR Garbage - Exp 8a */
+  //CArena* pc_arena=m_pcSimulator->GetArena();
+
+  ///* Get a random x,y pair for all blueLightObjets */
+  //dVector2 vCenter[m_nBlueLightObjectNumber];
+  //for( int i = 0 ; i < m_nBlueLightObjectNumber ; i++)
+  //{
+    //vCenter[i].x = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+    //vCenter[i].y = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+  //}
+
+  ///* DEBUG */
+  ////for( int i = 0 ; i < m_nBlueLightObjectNumber ; i++)
+  ////printf("RandomCenter %d: %2f, %2f\n", i, vCenter[i].x, vCenter[i].y);
+  ///* END DEBUG */
+
+  ///* Set all grey areas on the x,y pair of bluelightobjets */
+  //vector<CGroundArea*> vGroundAreas=pc_arena->GetGroundAreas();
+  //vector<CGroundArea*>::iterator it_ground=vGroundAreas.begin();
+
+  //int nCounter = 0;
+  //double f_color;
+  //while(it_ground!=vGroundAreas.end())
+  //{
+    //(*it_ground)->GetColor(&f_color);
+    //if (f_color == 0.5)
+    //{
+      //(*it_ground)->SetCenter(vCenter[nCounter]);
+      //nCounter++;
+      ///* DEBUG */
+      ////printf("RandomCenter %d: %2f, %2f\n", nCounter, vCenter[i].x, vCenter[i].y);
+      ///* END DEBUG */
+    //}
+
+    //it_ground++;
+  //}
+
+  //nCounter = 0;
+
+  ///* Set all bluelightobjets on the x,y pair of bluelightobjets */
+  //vector<CBlueLightObject*> vLightObject=pc_arena->GetBlueLightObject();
+  //vector<CBlueLightObject*>::iterator it_lightobject=vLightObject.begin();
+
+  //while(it_lightobject!=vLightObject.end())
+  //{
+    //(*it_lightobject)->SetCenter(vCenter[nCounter]);
+    //nCounter++;
+    //it_lightobject++;
+  //}
+  /* END CODE FOR Garbage - Exp 8a */
+
+  /* CODE FOR Garbage - Exp 8b */
+  //CArena* pc_arena=m_pcSimulator->GetArena();
+
+  ///* Get a random x,y pair for all ground areas */
+  //dVector2 vCenter[m_nNumberOfGroundArea];
+  //for( int i = 0 ; i < m_nNumberOfGroundArea ; i++)
+  //{
+    //vCenter[i].x = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+    //vCenter[i].y = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+  //}
+
+  ///* DEBUG */
+  ////for( int i = 0 ; i < m_nBlueLightObjectNumber ; i++)
+  ////printf("RandomCenter %d: %2f, %2f\n", i, vCenter[i].x, vCenter[i].y);
+  ///* END DEBUG */
+
+  ///* Set all areas on the x,y pair of ground areas */
+  //vector<CGroundArea*> vGroundAreas=pc_arena->GetGroundAreas();
+  //vector<CGroundArea*>::iterator it_ground=vGroundAreas.begin();
+
+  //int nCounter = 0;
+  //double f_color;
+  //while(it_ground!=vGroundAreas.end())
+  //{
+    //(*it_ground)->SetCenter(vCenter[nCounter]);
+      ///* DEBUG */
+      ////printf("RandomCenter %d: %2f, %2f\n", nCounter, vCenter[i].x, vCenter[i].y);
+      ///* END DEBUG */
+
+    //nCounter++;
+    //it_ground++;
+  //}
+
+  ///* We know there is only 1 black arena (first on the array) and 1 yellow light */
+  //nCounter = 0;
+  //vector<CLightObject*> vLightObject=pc_arena->GetLightObject();
+  //vector<CLightObject*>::iterator it_lightobject=vLightObject.begin();
+
+  //while(it_lightobject!=vLightObject.end())
+  //{
+    //(*it_lightobject)->SetCenter(vCenter[nCounter]);
+    //nCounter++;
+    //it_lightobject++;
+  //}
+
+
+  //vector<CBlueLightObject*> vBlueLightObject=pc_arena->GetBlueLightObject();
+  //vector<CBlueLightObject*>::iterator it_bluelightobject=vBlueLightObject.begin();
+
+  //while(it_bluelightobject!=vBlueLightObject.end())
+  //{
+    //(*it_bluelightobject)->SetCenter(vCenter[nCounter]);
+    //nCounter++;
+    //it_bluelightobject++;
+  //}
+  /* END CODE FOR Garbage - Exp 8b*/
 
 	m_pcCollisionManager->Reset();
 }
