@@ -4,32 +4,32 @@
 /******************************************************************************/
 /******************************************************************************/
 
-CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, CEpuck* pc_epuck, 
-																									 unsigned int un_number_of_layers, 
-																									 unsigned int* un_layers_outputs,	
+CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, CEpuck* pc_epuck,
+																									 unsigned int un_number_of_layers,
+																									 unsigned int* un_layers_outputs,
 																									 unsigned int* un_layer_sensor_type,
 																									 unsigned int* un_activation_function,
 																									 unsigned int** un_adjacency_matrix,
 																									 unsigned int* un_learning_layer_flag,
 																									 unsigned int* un_evo_devo_layer_flag,
 																									 unsigned int* un_learning_diagonal_flag,
-																									 double f_lower_bounds, 
+																									 double f_lower_bounds,
 																									 double f_upper_bounds,
-																									 bool b_evolutionary_flag, 
-																									 bool b_learning_flag, 
-																									 double f_eta, double f_epsilon, 
-																									 int n_write_to_file, 
-																									 unsigned int un_proximity_mumber, 
-																									 unsigned int* un_proximity_value, 
-																									 unsigned int un_contact_number, 
-																									 unsigned int* un_contact_value, 
-																									 unsigned int un_light_number, 
-																									 unsigned int* un_light_value, 
-																									 unsigned int un_ground_number, 
+																									 bool b_evolutionary_flag,
+																									 bool b_learning_flag,
+																									 double f_eta, double f_epsilon,
+																									 int n_write_to_file,
+																									 unsigned int un_proximity_mumber,
+																									 unsigned int* un_proximity_value,
+																									 unsigned int un_contact_number,
+																									 unsigned int* un_contact_value,
+																									 unsigned int un_light_number,
+																									 unsigned int* un_light_value,
+																									 unsigned int un_ground_number,
 																									 unsigned int* un_ground_value,
-																									 unsigned int un_blue_light_number, 
+																									 unsigned int un_blue_light_number,
 																									 unsigned int* un_blue_light_value,
-																									 unsigned int un_red_light_number, 
+																									 unsigned int un_red_light_number,
 																									 unsigned int* un_red_light_value) :
     CController(pch_name, pc_epuck),
     m_pfInputs(NULL)
@@ -129,7 +129,7 @@ CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, C
 						break;
 				}
 			}
-		}       
+		}
 
 		m_unNumberOfLayerInputs[i] = 0;
 		for ( int j = 0 ; j < m_unNumberOfLayers ; j++ )
@@ -141,16 +141,16 @@ CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, C
 		}
 
 		/* DEBUG */
-		//printf("%d %d %d %d %d\n",m_unNumberOfSensorInputs[i], m_unNumberOfLayerInputs[i], m_unNumberOfLayerOutputs[i],SIGMOID_ACTIVATION, i); 
+		//printf("%d %d %d %d %d\n",m_unNumberOfSensorInputs[i], m_unNumberOfLayerInputs[i], m_unNumberOfLayerOutputs[i],SIGMOID_ACTIVATION, i);
 		/* DEBUG */
 
 		CCTRNNLayerController* pcLayer;
 		pcLayer = new CCTRNNLayerController ( 	"layer", pc_epuck,
-																			m_unNumberOfSensorInputs[i], 
-																			m_unNumberOfLayerInputs[i], 
-																			m_unNumberOfLayerOutputs[i], 
-																			m_unActivationFunction[i], 
-																			i, 
+																			m_unNumberOfSensorInputs[i],
+																			m_unNumberOfLayerInputs[i],
+																			m_unNumberOfLayerOutputs[i],
+																			m_unActivationFunction[i],
+																			i,
 																			m_fLowerBounds,
 																			m_fUpperBounds);
 		m_vecLayers.push_back(pcLayer);
@@ -193,24 +193,24 @@ CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, C
        *Number of Layer INPUTS includes recurrency (SELF) */
       m_unNumberOfParameters[i] = (m_unNumberOfLayerInputs[i] + 3 ) * m_unNumberOfLayerOutputs[i] + m_unNumberOfSensorInputs[i];
     }
-		
+
 		/* Each layer weight matrix is as big as the number of paramenters */
 		m_pfWeightMatrix[i] = new double[m_unNumberOfParameters[i]];
 	}
 
-	
+
 	/* Create semi-random chromosome file */
 	/* This is only used if the experiment has been executed with -l */
 	if (m_bLearningFlag == true )
 	{
 		FILE* fileLearning = fopen("learningFiles/initFile","a");
 		//printf( " LEARNING\n");
-		
+
 		for ( int i = 0 ; i < m_unNumberOfLayers ; i++)
 		{
 			//printf("LAYER: %d: %d %d\n", i, m_unNumberOfLayerInputs[i], m_unNumberOfLayerOutputs[i]);
 			int nVar = m_unNumberOfLayerInputs[i] / m_unNumberOfLayerOutputs[i];
-			
+
 			if ( m_unActivationFunction[i] != IDENTITY_ACTIVATION )
 			{
 				for ( int j = 0 ; j < m_unNumberOfLayerOutputs[i] ; j++ )
@@ -220,7 +220,7 @@ CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, C
 						fprintf(fileLearning, "%2f ", 1.5 );
 					else
 						fprintf(fileLearning, "%2f ", 0.8 );
-					
+
 					for ( int k = 0 ; k < m_unNumberOfLayerInputs[i] ; k++ )
 					{
 						if ( m_unLearningLayerFlag[i] != 0 )
@@ -233,16 +233,16 @@ CCTRNNDistributedController::CCTRNNDistributedController(const char* pch_name, C
 							{
 								fprintf(fileLearning,"%2f ", 0.0);
 							}
-							else 
+							else
 							{
 								fprintf(fileLearning, "%2f ", 0.0);
 							}
-						}	
+						}
 					}
 				}
 			}
 		}
-		
+
 		fclose(fileLearning);
 
 		exit(0);
@@ -266,15 +266,15 @@ CCTRNNDistributedController::~CCTRNNDistributedController()
 	delete [] m_unLearningLayerFlag;
 	delete [] m_unLearningDiagonalFlag;
 	delete [] m_unEvoDevoLayerFlag;
-	
+
 	for ( int i = 0 ; i < m_unNumberOfLayers ; i++ )
 	{
 		delete [] m_mAdjacencyMatrix[i];
 		delete [] m_fOutputMatrix[i];
 		delete [] m_fOutputMatrixOld[i];
 		delete [] m_pfWeightMatrix[i];
-	} 
-	
+	}
+
 	/* Morphology */
 	delete [] m_unProximitySensorsUsedValue;
 	delete [] m_unContactSensorsUsedValue;
@@ -283,7 +283,7 @@ CCTRNNDistributedController::~CCTRNNDistributedController()
 	delete [] m_unRedLightSensorsUsedValue;
 	delete [] m_unGroundSensorsUsedValue;
 
-		
+
 }
 
 
@@ -322,7 +322,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
             {
               if ( m_unContactSensorsUsedValue[i] == 1 )
               {
-                pfSensorInputs[realIndex] = pfTotalSensorInputs[i]; 
+                pfSensorInputs[realIndex] = pfTotalSensorInputs[i];
                 realIndex++;
               }
             }
@@ -335,7 +335,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
             {
               if ( m_unProximitySensorsUsedValue[i] == 1 )
               {
-                pfSensorInputs[realIndex] = pfTotalSensorInputs[i]; 
+                pfSensorInputs[realIndex] = pfTotalSensorInputs[i];
                 realIndex++;
               }
             }
@@ -347,7 +347,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
             {
               if ( m_unLightSensorsUsedValue[i] == 1 )
               {
-                pfSensorInputs[realIndex] = pfTotalSensorInputs[i]; 
+                pfSensorInputs[realIndex] = pfTotalSensorInputs[i];
                 realIndex++;
               }
             }
@@ -359,7 +359,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
             {
               if ( m_unBlueLightSensorsUsedValue[i] == 1 )
               {
-                pfSensorInputs[realIndex] = pfTotalSensorInputs[i]; 
+                pfSensorInputs[realIndex] = pfTotalSensorInputs[i];
                 realIndex++;
               }
             }
@@ -371,7 +371,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
             {
               if ( m_unRedLightSensorsUsedValue[i] == 1 )
               {
-                pfSensorInputs[realIndex] = pfTotalSensorInputs[i]; 
+                pfSensorInputs[realIndex] = pfTotalSensorInputs[i];
                 realIndex++;
               }
             }
@@ -379,19 +379,19 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
 
           case SENSOR_BATTERY:
             pfSensorInputs = new double[1];
-            pfSensorInputs[0] = pfTotalSensorInputs[0]; 
+            pfSensorInputs[0] = pfTotalSensorInputs[0];
             break;
           case SENSOR_BLUE_BATTERY:
             pfSensorInputs = new double[1];
-            pfSensorInputs[0] = pfTotalSensorInputs[0]; 
+            pfSensorInputs[0] = pfTotalSensorInputs[0];
             break;
           case SENSOR_RED_BATTERY:
             pfSensorInputs = new double[1];
-            pfSensorInputs[0] = pfTotalSensorInputs[0]; 
+            pfSensorInputs[0] = pfTotalSensorInputs[0];
             break;
           case SENSOR_GROUND_MEMORY:
             pfSensorInputs = new double[1];
-            pfSensorInputs[0] = pfTotalSensorInputs[0]; 
+            pfSensorInputs[0] = pfTotalSensorInputs[0];
             break;
           case SENSOR_GROUND:
             pfSensorInputs = new double[m_unGroundSensorsUsedNumber];
@@ -399,7 +399,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
             {
               if ( m_unGroundSensorsUsedValue[i] == 1 )
               {
-                pfSensorInputs[realIndex] = pfTotalSensorInputs[i]; 
+                pfSensorInputs[realIndex] = pfTotalSensorInputs[i];
                 realIndex++;
               }
             }
@@ -449,7 +449,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
       double* contact = m_seContact->GetSensorReading(m_pcEpuck);
       for ( int j = 0 ; j < m_seContact->GetNumberOfInputs() ; j++)
       {
-        if(contact[j] > 0.0) 
+        if(contact[j] > 0.0)
           nContact=1;
       }
 
@@ -462,10 +462,17 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
           FILE* fileContact = fopen("outputFiles/robotContacts", "a");
           fprintf(fileContact,"%2.4f\n", m_fTime);
           fclose(fileContact);
-          //printf("%2.4f CONTACT\n",f_time);	
+          //printf("%2.4f CONTACT\n",f_time);
         }
       }
     }
+
+		CRedBatterySensor* m_seRedBattery = (CRedBatterySensor*) m_pcEpuck->GetSensor(SENSOR_RED_BATTERY);
+		double* redBattery = m_seRedBattery->GetSensorReading(m_pcEpuck);
+		/* printf("\nRed battery: %f\n", redBattery[0]); */
+		if(redBattery[0] < 0.5)
+			m_pcEpuck->SetAllColoredLeds(	LED_COLOR_RED);
+
     /* DEBUG */
 
     /* DEBUG */
@@ -528,7 +535,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
 
     delete [] pfLayerInputs;
 
-    if ( m_nWriteToFile ) 
+    if ( m_nWriteToFile )
     {
       /* INIT: WRITING TO FILES */
       if (!m_bEvolutionaryFlag){
@@ -576,12 +583,12 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
 
     for (int l = 0; l < unThisActuatorNumberOfOutputs; l++)
     {
-      if ( m_fOutputMatrix[(m_unNumberOfLayers -1 )][l] > 1.0 ) 
+      if ( m_fOutputMatrix[(m_unNumberOfLayers -1 )][l] > 1.0 )
         m_fOutputMatrix[(m_unNumberOfLayers -1 )][l] = 1.0;
       if ( m_fOutputMatrix[(m_unNumberOfLayers -1 )][l] < 0.0)
         m_fOutputMatrix[(m_unNumberOfLayers -1 )][l] = 0.0;
       (*k)->SetOutput(l, m_fOutputMatrix[(m_unNumberOfLayers -1 )][l]);
-    }              
+    }
   }
 
   /* DEBUG */
@@ -595,7 +602,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
   }
   /* DEBUG */
 
-  if ( m_nWriteToFile && !m_bEvolutionaryFlag) 
+  if ( m_nWriteToFile && !m_bEvolutionaryFlag)
   {
     /* INIT: WRITE TO FILES */
     /* Write robot position and orientation */
@@ -616,7 +623,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
   if (!m_bEvolutionaryFlag)
   {
     /* Calc Collisions */
-    m_unDebugCollisions = CCollisionManager::GetInstance()->GetTotalNumberOfCollisions();	
+    m_unDebugCollisions = CCollisionManager::GetInstance()->GetTotalNumberOfCollisions();
 
     /* Calc Max Linear Speed */
     double f_tempLinearSpeed = ( ( (2000 * m_fOutputMatrix[(m_unNumberOfLayers -1 )][0] ) - 1000 ) + ( (2000 * m_fOutputMatrix[(m_unNumberOfLayers -1 )][1] ) - 1000 ) ) / 2.0;
@@ -631,7 +638,7 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
 
     printf("---------------\n");
     printf("---------------\n");
-    printf ( "MAX SPEED: %2f -- MAX DIST: %2f -- COLL: %2d\n", m_fDebugMaxLinearSpeed, m_fDebugMaxDist, m_unDebugCollisions); 
+    printf ( "MAX SPEED: %2f -- MAX DIST: %2f -- COLL: %2d\n", m_fDebugMaxLinearSpeed, m_fDebugMaxDist, m_unDebugCollisions);
     printf("---------------\n");
     printf("---------------\n");
   }
@@ -649,7 +656,7 @@ unsigned int CCTRNNDistributedController::GetNumberOfSensorInputs()
 	{
 		systemSensorInputs += m_unNumberOfSensorInputs[i];
 	}
-	
+
     return systemSensorInputs;
 }
 
@@ -705,17 +712,17 @@ void CCTRNNDistributedController::SaveState(const char* pch_filename){
 /******************************************************************************/
 
 void CCTRNNDistributedController::LoadState(const char* pch_filename){
-	
+
 }
 /******************************************************************************/
 /******************************************************************************/
-void CCTRNNDistributedController::SetWeights(unsigned int un_number_of_weights, double* pf_weights) 
+void CCTRNNDistributedController::SetWeights(unsigned int un_number_of_weights, double* pf_weights)
 {
 	//if (un_number_of_weights != m_unRequiredNumberOfWeights)
 	//{
-		//printf("CCTRNNLayerController::SetWeights ERROR. Numero incorrecto de pesos\n");   
-		//exit(1);                       
-	//}      
+		//printf("CCTRNNLayerController::SetWeights ERROR. Numero incorrecto de pesos\n");
+		//exit(1);
+	//}
 
 	// Set the weights
 	//memcpy(m_pfWeights, pf_weights, m_unRequiredNumberOfWeights * sizeof(double));
@@ -729,7 +736,7 @@ void CCTRNNDistributedController::SetWeights(unsigned int un_number_of_weights, 
 	//}
 	//printf("\n");
 	/* DEBUG */
-	
+
 	//ofstream file("weightsFile");
 	int nIndex = 0;
 	for ( int i = 0 ; i < m_unNumberOfLayers ; i++)
@@ -749,7 +756,7 @@ void CCTRNNDistributedController::SetWeights(unsigned int un_number_of_weights, 
 
 
 	//file << nIndex << " " ;
-	
+
 	//for ( int i = 0 ; i < nIndex ; i++ )
 	//{
 		//file << 0.5 << " ";
@@ -767,13 +774,13 @@ void CCTRNNDistributedController::SetWeights(unsigned int un_number_of_weights, 
 		//}
 		//printf("\n");
 	//}
-	
-	//Scale the weights in given range                      
+
+	//Scale the weights in given range
 	//if(!((m_fUpperBounds==1.0)&&(m_fLowerBounds==0.0))){
-	//for(int i=0;i<un_number_of_weights;i++){                 
+	//for(int i=0;i<un_number_of_weights;i++){
 	//m_pfWeights[i]=m_pfWeights[i]*(m_fUpperBounds-m_fLowerBounds)+m_fLowerBounds;
 	//}
-	//} 
+	//}
 }
 
 /******************************************************************************/
@@ -787,18 +794,18 @@ void CCTRNNDistributedController::LearningFunction ( double* f_layer_inputs, dou
 	//{
 	//if ( i % ( m_unNumberOfLayersInputs[un_layer] + 1) != 0 )
 	//{
-	//m_pfWeightMatrix[un_layer][i] += fNu * m_fOutputMatrix[un_layer][i] * f_inputs[i] 
+	//m_pfWeightMatrix[un_layer][i] += fNu * m_fOutputMatrix[un_layer][i] * f_inputs[i]
 	//}
 	//}
 	//printf("---------------------ETA: %2f, EP: %2f\n", m_fEta, m_fEpsilon);
-	
+
 	double fOutputAverage = 0.0;
 	for ( int i= 0 ; i < m_unNumberOfLayerOutputs[un_layer] ; i++)
 	{
 		fOutputAverage += m_fOutputMatrix[un_layer][i];
 	}
 		fOutputAverage /= m_unNumberOfLayerOutputs[un_layer];
- 
+
 	int nIndexWeights = 0;
 	for ( int i= 0 ; i < m_unNumberOfLayerOutputs[un_layer] ; i++)
 	{
@@ -814,7 +821,7 @@ void CCTRNNDistributedController::LearningFunction ( double* f_layer_inputs, dou
 				if ( i == j )
 				{
 					//m_pfWeightMatrix[un_layer][nIndexWeights] += m_fEta * m_fOutputMatrix[un_layer][j] * f_sensor_inputs[i] * f_layer_inputs[i]
-					m_pfWeightMatrix[un_layer][nIndexWeights] += m_fEta * m_fOutputMatrix[un_layer][i] * f_sensor_inputs[i]; 
+					m_pfWeightMatrix[un_layer][nIndexWeights] += m_fEta * m_fOutputMatrix[un_layer][i] * f_sensor_inputs[i];
 				}
 				/* If not in the diagonal */
 				else {
@@ -822,7 +829,7 @@ void CCTRNNDistributedController::LearningFunction ( double* f_layer_inputs, dou
 					if ( m_unLearningDiagonalFlag[un_layer] == 0 )
 					{
 						//m_pfWeightMatrix[un_layer][nIndexWeights] += m_fEta * m_fOutputMatrix[un_layer][j] * f_sensor_inputs[i] * f_layer_inputs[i]
-						m_pfWeightMatrix[un_layer][nIndexWeights] += m_fEta * m_fOutputMatrix[un_layer][i] * f_sensor_inputs[i]; 
+						m_pfWeightMatrix[un_layer][nIndexWeights] += m_fEta * m_fOutputMatrix[un_layer][i] * f_sensor_inputs[i];
 					}
 				}
 			}
@@ -921,12 +928,10 @@ void CCTRNNDistributedController::Reset( void )
 			m_fOutputMatrixOld[i][j] = 0.0;
 		}
 	}
-  
+
   /* Reset every layer */
   for (TLayerIterator i = m_vecLayers.begin() ; i != m_vecLayers.end(); i++)
   {
     (*i)->Reset();
   }
 }
-
-
