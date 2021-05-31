@@ -23,6 +23,7 @@ class CCTRNNDistributedController;
 #include "controller.h"
 #include "ctrnnlayercontroller.h"
 #include "contactsensor.h"
+#include "redbatterysensor.h"
 #include "collisionmanager.h"
 /******************************************************************************/
 /******************************************************************************/
@@ -41,39 +42,39 @@ class CCTRNNDistributedController : public CController
 				unsigned int* un_layers_outputs,
 				unsigned int* un_layer_sensor_type,
 				unsigned int* un_activation_function,
-				unsigned int** un_adjacency_matrix, 
+				unsigned int** un_adjacency_matrix,
 				unsigned int* un_learning_layer_flag,
 				unsigned int* un_evo_devo_layer_flag,
 				unsigned int* un_learning_diagonal_flag,
-				double f_lower_bounds, 
-				double f_upper_bounds, 
-				bool b_evolutionary_flag, 
-				bool b_learning_flag, 
+				double f_lower_bounds,
+				double f_upper_bounds,
+				bool b_evolutionary_flag,
+				bool b_learning_flag,
 				double f_nu, double f_epsilon,
-				int n_write_to_file, 
-				unsigned int un_proximity_mumber, 
-				unsigned int* un_proximity_value, 
-				unsigned int un_contact_number, 
-				unsigned int* un_contact_value, 
-				unsigned int un_light_number, 
-				unsigned int* un_light_value, 
-				unsigned int un_ground_number, 
-				unsigned int* un_ground_value, 
-				unsigned int un_blue_light_number, 
+				int n_write_to_file,
+				unsigned int un_proximity_mumber,
+				unsigned int* un_proximity_value,
+				unsigned int un_contact_number,
+				unsigned int* un_contact_value,
+				unsigned int un_light_number,
+				unsigned int* un_light_value,
+				unsigned int un_ground_number,
+				unsigned int* un_ground_value,
+				unsigned int un_blue_light_number,
 				unsigned int* un_blue_light_value,
-				unsigned int un_red_light_number, 
+				unsigned int un_red_light_number,
 				unsigned int* un_red_light_value);
 		~CCTRNNDistributedController();
-		
+
 		virtual void SimulationStep(unsigned n_step_number, double f_time, double f_step_interval);
-		
+
 		double* LoadWeights(const char* pch_filename);
 
 		void Reset();
 
 		void SaveState(const char* pch_filename);
 		void LoadState(const char* pch_filename);
-		void SetWeights(unsigned int un_number_of_weights, double* pf_weights); 
+		void SetWeights(unsigned int un_number_of_weights, double* pf_weights);
 
 		void SetUpperBounds(float fUB);
 		void SetLowerBounds(float fUB);
@@ -89,7 +90,7 @@ protected:
     unsigned int m_unNumberOfActuatorOutputs;
 
     double*      m_pfInputs;
-		
+
 		unsigned int 		m_unNumberOfLayers;
 		unsigned int* 	m_unNumberOfLayerInputs;
 		unsigned int* 	m_unNumberOfSensorInputs;
@@ -102,13 +103,13 @@ protected:
 		unsigned int*		m_unLearningLayerFlag;
 		unsigned int*		m_unLearningDiagonalFlag;
 		unsigned int*		m_unEvoDevoLayerFlag;
-		
+
 		double ** 			m_pfWeightMatrix;
 		unsigned int*		m_unNumberOfParameters;
 
 		double m_fUpperBounds;
 		double m_fLowerBounds;
-		
+
 		TLayerVector m_vecLayers;
 
 
@@ -145,3 +146,4 @@ protected:
 /******************************************************************************/
 
 #endif
+
