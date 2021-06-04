@@ -465,13 +465,23 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
           //printf("%2.4f CONTACT\n",f_time);
         }
       }
-    }
+			CRedBatterySensor* m_seRedBattery = (CRedBatterySensor*) m_pcEpuck->GetSensor(SENSOR_RED_BATTERY);
+			double* redBattery = m_seRedBattery->GetSensorReading(m_pcEpuck);
+			int lowBattery = 0;
+			/* printf("\nRed battery: %f\n", redBattery[0]); */
+			if(redBattery[0] < 0.5){
+				m_pcEpuck->SetAllColoredLeds(	LED_COLOR_RED);
+				lowBattery = 1;
+			}
 
-		CRedBatterySensor* m_seRedBattery = (CRedBatterySensor*) m_pcEpuck->GetSensor(SENSOR_RED_BATTERY);
-		double* redBattery = m_seRedBattery->GetSensorReading(m_pcEpuck);
-		/* printf("\nRed battery: %f\n", redBattery[0]); */
-		if(redBattery[0] < 0.5)
-			m_pcEpuck->SetAllColoredLeds(	LED_COLOR_RED);
+			if ( !m_bEvolutionaryFlag && m_nWriteToFile)
+			{
+				FILE* fileBattery = fopen("outputFiles/robotBattery", "a");
+				fprintf(fileBattery,"%2.4f %d\n", m_fTime, lowBattery);
+				fclose(fileBattery);
+				printf("%2.4f lowBattery\n",lowBattery);
+			}
+    }
 
     /* DEBUG */
 
