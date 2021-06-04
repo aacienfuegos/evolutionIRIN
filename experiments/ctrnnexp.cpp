@@ -1049,6 +1049,16 @@ void CCTRNNExp::RandomPositionAndOrientation ( void )
     nCounter++;
     it_bluelightobject++;
   }
+
+  vector<CRedLightObject*> vRedLightObject=pc_arena->GetRedLightObject();
+  vector<CRedLightObject*>::iterator it_redlightobject=vRedLightObject.begin();
+
+  while(it_redlightobject!=vRedLightObject.end())
+  {
+    (*it_redlightobject)->SetCenter(vCenter[nCounter]);
+    nCounter++;
+    it_redlightobject++;
+  }
   /* END CODE FOR Garbage - Exp 8b*/
 
 	m_pcCollisionManager->Reset();
