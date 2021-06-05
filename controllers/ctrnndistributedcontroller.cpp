@@ -1,5 +1,12 @@
 #include "ctrnndistributedcontroller.h"
 
+/* SENSORS FOR DEBUGGING */
+#include "reallightsensor.h"
+#include "realbluelightsensor.h"
+#include "realredlightsensor.h"
+#include "groundmemorysensor.h"
+#include "redbatterysensor.h"
+
 
 /******************************************************************************/
 /******************************************************************************/
@@ -654,6 +661,36 @@ void CCTRNNDistributedController::SimulationStep(unsigned n_step_number, double 
   }
   /* END DEBUG COMPARISON AGUTI */
 
+  /* DEBUG CIENFUEGOS AND CRISTINA */
+  if ( m_nWriteToFile && !m_bEvolutionaryFlag)
+  {
+	double* lights = new double[3];
+
+	CRealLightSensor* m_seLight = (CRealLightSensor*) m_pcEpuck->GetSensor(SENSOR_REAL_LIGHT);
+	double* light = m_seLight->GetSensorReading(m_pcEpuck);
+	lights[0] = light[0]+light[7];
+
+	CRealBlueLightSensor* m_seBlueLight = (CRealBlueLightSensor*) m_pcEpuck->GetSensor(SENSOR_REAL_BLUE_LIGHT);
+	double* bluelight = m_seBlueLight->GetSensorReading(m_pcEpuck);
+	lights[1] = bluelight[0]+bluelight[7];
+
+	CRealRedLightSensor* m_seRedLight = (CRealRedLightSensor*) m_pcEpuck->GetSensor(SENSOR_REAL_RED_LIGHT);
+	double* redlight = m_seRedLight->GetSensorReading(m_pcEpuck);
+	lights[2] = redlight[0]+redlight[7];
+
+	CGroundMemorySensor* m_seGroundMemory = (CGroundMemorySensor*) m_pcEpuck->GetSensor (SENSOR_GROUND_MEMORY);
+	double* groundmemory = m_seGroundMemory->GetSensorReading(m_pcEpuck);
+
+	CRedBatterySensor* m_seRedBattery = (CRedBatterySensor*) m_pcEpuck->GetSensor (SENSOR_RED_BATTERY);
+	double* redbattery = m_seRedBattery->GetSensorReading(m_pcEpuck);
+
+	/* INIT: WRITE TO FILES */
+	FILE* filePosition = fopen("outputFiles/robotSensors", "a");
+	fprintf(filePosition,"%2.4f %2.4f %2.4f %2.4f %2.4f %2.4f \n", m_fTime, lights[0], lights[1], lights[2], groundmemory[0], redbattery[0]);
+	fclose(filePosition);
+    /* END WRITE TO FILES */
+  }
+  /* END DEBUG CIENFUEGOS AND CRISTINA */
 }
 
 /******************************************************************************/
