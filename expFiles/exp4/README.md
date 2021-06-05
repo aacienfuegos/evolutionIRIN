@@ -1,0 +1,1 @@
+fitness func with multiplication
