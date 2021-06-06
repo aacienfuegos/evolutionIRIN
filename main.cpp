@@ -1398,7 +1398,7 @@ void usage(){
 	printf("RENDSIM, command line options:\n");
 	printf("-s seed, uses seed as random seed\n");
 	printf("-e, to run the evolutionary mode\n");
-	printf("-x id, uses id as suffix for geneticDataFiles folder");
+	printf("-x id, uses id as suffix for geneticDataFiles folder\n");
 	printf("-f, saves frames in ./frames\n");
 	printf("-r num, restarts evolution from generation num\n");
 	printf("-E exp_id, runs the experiment identified by exp_id (integer).\n If none is given it prints experiments id\n");
