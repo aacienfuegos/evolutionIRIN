@@ -58,7 +58,7 @@ BLUE BATTERY SENSOR RANGE (meters)		= 0.5
 BLUE BATTERY CHARGE COEF 							= 0.01
 BLUE BATTERY DISCHARGE COEF						= 0.001
 RED BATTERY SENSOR RANGE (meters)			= 0.3
-RED BATTERY CHARGE COEF 							= 0.02 
+RED BATTERY CHARGE COEF 							= 0.02
 RED BATTERY DISCHARGE COEF						= 0.001
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,13 +77,13 @@ GROUND SENSORS USED     (3 sensors: 0 OFF, 1 ON)  = 1 1 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 CHROMOSOME LENGTH 												= 114
-POPULATION SIZE														= 50
+POPULATION SIZE														= 75
 NUMBER OF GENERATIONS											= 10000
 EVALUATION TIME														= 300
 DO CROSSOVER ( 0 No, 1 Yes )							= 1
 NUMBER OF CROSSOVERS ( Always 1 ) 				= 1
 CROSSOVER DISTANCE 	 ( Always 1 ) 				= 1
-MUTATION RATE															= 0.05
+MUTATION RATE															= 0.15
 NUMBER OF ELITES													= 4
 FITNESS FUNCTION													= 4
 SAMPLES PER CHORMOSOME										= 1
