@@ -286,6 +286,9 @@ int main(int argc, char** argv)
 		int ArenaType = g_pcExperiment->GetSimulator()->GetArena()->GetArenaType();
 		/* Set if frames to be produce */
 		g_pcRender->SetProduceFrames(g_bProduceFrames);
+		/* Randomize map */
+		if (g_unRandomPositionOrientation)
+			g_pcExperiment->RandomPositionAndOrientation();
 		/* Start simulation */
 		g_pcRender->Start();
 	}
