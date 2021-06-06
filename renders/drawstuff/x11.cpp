@@ -94,7 +94,7 @@ static int last_key_pressed=0;		// last key pressed in the window
 static int run=1;			// 1 if simulation running
 static int pause=0;			// 1 if in `pause' mode
 static int singlestep=0;		// 1 if single step key pressed
-static int writeframes=0;		// 1 if frame files to be written
+static int writeframes=1;		// 1 if frame files to be written
 
 
 static void createMainWindow (int _width, int _height)
@@ -322,7 +322,8 @@ static void captureFrame (int num)
 void dsPlatformSimLoop (int window_width, int window_height, dsFunctions *fn,
 			int initial_pause)
 {
-  pause = initial_pause;
+  /* pause = initial_pause; */
+  pause = 0;
   createMainWindow (window_width, window_height);
   glXMakeCurrent (display,win,glx_context);
   dsStartGraphics (window_width,window_height,fn);
